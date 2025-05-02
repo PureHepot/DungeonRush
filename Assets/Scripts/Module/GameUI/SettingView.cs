@@ -37,10 +37,12 @@ public class SettingView : BaseView
     {
         if (flag)
         {
+            lastVolume = GameApp.SoundManager.BgmVolume;
             GameApp.SoundManager.BgmVolume = 0;
             GameApp.SoundManager.EffectVolume = 0;
             Find<Image>("BgmVolume/VolumeBtn").sprite = atlasSprite;
             Find<Slider>("BgmVolume/VolumeSlider").value = 0;
+            flag = false;
         }
         else
         {
@@ -48,22 +50,22 @@ public class SettingView : BaseView
             GameApp.SoundManager.EffectVolume = lastVolume;
             Find<Image>("BgmVolume/VolumeBtn").sprite = lastSprite;
             Find<Slider>("BgmVolume/VolumeSlider").value = lastVolume;
+            flag = true;
         }
-        flag = !flag;
     }
     private void onChangeVolumeSlider(float value)
     {
         GameApp.SoundManager.BgmVolume = value;
         GameApp.SoundManager.EffectVolume = value;
-        lastVolume = value;
         if (value != 0)
         {
+            if (!flag)
+                flag = true;
             Find<Image>("BgmVolume/VolumeBtn").sprite = lastSprite;
         }
     }
     private void onCloseBtn()
     {
         GameApp.ViewManager.Close(ViewId);
-        GameApp.ViewManager.Open(ViewType.StartView);
     }
 }

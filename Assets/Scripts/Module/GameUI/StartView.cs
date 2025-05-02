@@ -16,15 +16,28 @@ public class StartView : BaseView
 
     private void onStartBtn()
     {
-
+        LoadSomeScene.LoadtheScene(Controller,this.ViewId, "dungeon", () =>
+        {
+            GameApp.ViewManager.GetView<LoadingView>((int)ViewType.LoadingView).Move2Left();
+            GameApp.TimerManager.Register(1f, () =>
+            {
+                GameApp.ViewManager.Close(ViewType.LoadingView);
+            });
+        });
     }
     private void onSettingBtn()
     {
-        GameApp.ViewManager.Close(ViewId);
-        GameApp.ViewManager.Open(ViewType.SettingView);
+        ApplyFunc(Defines.OpenSetView);
     }
     private void onExitBtn()
     {
+        Controller.ApplyFunc(Defines.OpenMessageView, new MessageInfo()
+        {
+            txt = "Quit Game?",
+            okCallback = () =>
+            {
 
+            }
+        });
     }
 }

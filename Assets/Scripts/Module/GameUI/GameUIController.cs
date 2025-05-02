@@ -20,7 +20,13 @@ public class GameUIController : BaseController
             parentTf = GameApp.ViewManager.canvasTf,
             Sorting_Order = 1
         });
-
+        GameApp.ViewManager.Register(ViewType.MessageView, new ViewInfo()
+        {
+            PrefabName = "MessageView",
+            controller = this,
+            parentTf = GameApp.ViewManager.canvasTf,
+            Sorting_Order = 999
+        });
         InitGlobalEvent();
         InitModuleEvent();
     }
@@ -58,5 +64,9 @@ public class GameUIController : BaseController
     private void openSettingView(object[] args)
     {
         GameApp.ViewManager.Open(ViewType.SettingView, args);
+    }
+    private void openMessageView(object[] args)
+    {
+        GameApp.ViewManager.Open(ViewType.MessageView, args);   
     }
 }
