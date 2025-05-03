@@ -4,7 +4,9 @@ using UnityEngine;
 
 public enum BlockType
 {
+    birth,
     floor,
+    obstacle,
     empty
 }
 

@@ -23,6 +23,7 @@ public class StartView : BaseView
             {
                 GameApp.ViewManager.Close(ViewType.LoadingView);
             });
+            Controller.ApplyControllerFunc(ControllerType.Fight, Defines.BeginFight);
         });
     }
     private void onSettingBtn()
@@ -36,7 +37,7 @@ public class StartView : BaseView
             txt = "Quit Game?",
             okCallback = () =>
             {
-
+                Application.Quit();
             }
         });
     }

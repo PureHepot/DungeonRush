@@ -40,7 +40,7 @@ public class MapManager
             }
         }
 
-        Object objPrefab = Resources.Load("Model/block");
+        Object objPrefab = Resources.Load("Prefabs/Model/block");
         for(int i =  0; i < temp.Count; i++)
         {
             int row = i / TotalColCount;

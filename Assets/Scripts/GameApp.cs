@@ -15,6 +15,8 @@ public class GameApp : Singleton<GameApp>
     public static MessageCenter MessageCenter;
     public static TimerManager TimerManager;
     public static UserInputManager UserInputManager;
+    public static MapManager MapManager;
+    public static CommandManager CommandManager;
 
     public override void Init()
     {
@@ -26,12 +28,14 @@ public class GameApp : Singleton<GameApp>
         MessageCenter = new MessageCenter();
         TimerManager = new TimerManager();
         UserInputManager = new UserInputManager();
-
+        MapManager = new MapManager();
+        CommandManager = new CommandManager();
     }
 
     public override void Update(float dt)
     {
         UserInputManager.Update();
         TimerManager.OnUpdate(dt);
+        CommandManager.Update(dt);
     }
 }
