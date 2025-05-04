@@ -13,6 +13,13 @@ public class FightController : BaseController
             parentTf = GameApp.ViewManager.canvasTf,
             Sorting_Order = 10
         });
+        GameApp.ViewManager.Register(ViewType.EscView, new ViewInfo()
+        {
+            PrefabName = "EscView",
+            controller = this,
+            parentTf = GameApp.ViewManager.canvasTf,
+            Sorting_Order = 4
+        });
 
 
         InitModuleEvent();

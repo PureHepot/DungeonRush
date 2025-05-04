@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class CommandManager
 {
+    public bool isStop;
+
     private Queue<BaseCommand> willDoCommandQueue;//将要执行的命令队列
     private Stack<BaseCommand> unDoStack;// 撤销命令 栈
     public BaseCommand current;//当前

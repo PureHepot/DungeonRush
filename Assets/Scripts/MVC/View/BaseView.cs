@@ -55,7 +55,7 @@ public class BaseView : MonoBehaviour, IBaseView
         this.Controller.ApplyFunc(eventName, args);
     }
 
-    public void Close(params object[] args)
+    public virtual void Close(params object[] args)
     {
         SetVisible(false);
     }

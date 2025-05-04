@@ -9,6 +9,9 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class UserInputManager
 {
+    public static bool escIsOpen;
+
+
     public void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -31,6 +34,20 @@ public class UserInputManager
                     }
                 });
             }
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!escIsOpen)
+            {
+                GameApp.ViewManager.Open(ViewType.EscView);
+                escIsOpen = true;
+            }
+            else
+            {
+                GameApp.ViewManager.Close(ViewType.EscView);
+                escIsOpen = false;
+            }
+                
         }
     }
 }

@@ -6,17 +6,22 @@ using UnityEngine.SceneManagement;
 //加载场景的快捷使用方式
 public static class LoadSomeScene
 {
-
-    public static void LoadtheScene(BaseController controller, int viewId, string sceneName, System.Action action)
+    /// <summary>
+    /// 加载某个场景
+    /// </summary>
+    /// <param name="controller">任意控制器引用</param>
+    /// <param name="sceneName">要加载的场景名称</param>
+    /// <param name="action1">加载完成后做的事</param>
+    /// <param name="action2">加载中做的事</param>
+    public static void LoadtheScene(BaseController controller, string sceneName, System.Action action1, System.Action action2 = null)
     {
         LoadingModel loadingmodel = new LoadingModel();
         loadingmodel.SceneName = sceneName;
-        loadingmodel.callback = action;
-        loadingmodel.viewId = viewId;
+        loadingmodel.callback = action1;
         GameApp.ViewManager.Open(ViewType.LoadingView);
         GameApp.ViewManager.GetView<LoadingView>((int)ViewType.LoadingView).Move2Center(() =>
         {
-            GameApp.ViewManager.Close(viewId);
+            action2?.Invoke();
             controller.ApplyControllerFunc(ControllerType.Loading, Defines.LoadingScene, loadingmodel);
         });
         
@@ -64,7 +69,7 @@ public class LoadingController : BaseController
 
         GameApp.ViewManager.GetView<LoadingView>((int)ViewType.LoadingView).Move2Left();
 
-        GameApp.TimerManager.Register(1f, () =>
+        GameApp.TimerManager.Register(0.5f, () =>
         {
             GetModel<LoadingModel>().callback?.Invoke();
 

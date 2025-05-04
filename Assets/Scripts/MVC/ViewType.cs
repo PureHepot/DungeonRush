@@ -11,5 +11,6 @@ public enum ViewType
     SettingView,
     MessageView,
     LoadingView,
-    TipView
+    TipView,
+    EscView
 }

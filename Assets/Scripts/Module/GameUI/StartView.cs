@@ -16,14 +16,14 @@ public class StartView : BaseView
 
     private void onStartBtn()
     {
-        LoadSomeScene.LoadtheScene(Controller,this.ViewId, "dungeon", () =>
+        LoadSomeScene.LoadtheScene(Controller,"dungeon", () =>
         {
-            GameApp.ViewManager.GetView<LoadingView>((int)ViewType.LoadingView).Move2Left();
-            GameApp.TimerManager.Register(1f, () =>
-            {
-                GameApp.ViewManager.Close(ViewType.LoadingView);
-            });
+            GameApp.ViewManager.Close(ViewType.LoadingView);
             Controller.ApplyControllerFunc(ControllerType.Fight, Defines.BeginFight);
+        },
+        () =>
+        {
+            GameApp.ViewManager.Close(ViewId);
         });
     }
     private void onSettingBtn()

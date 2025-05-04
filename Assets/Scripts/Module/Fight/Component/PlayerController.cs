@@ -7,19 +7,19 @@ public class PlayerController : ModelBase
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.W))
+        if(Input.GetKey(KeyCode.W))
         {
             PlayerMove(RowIndex + 1, ColIndex);
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
             PlayerMove(RowIndex - 1, ColIndex);
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKey(KeyCode.A))
         {
             PlayerMove(RowIndex, ColIndex - 1);
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKey(KeyCode.D))
         {
             PlayerMove(RowIndex, ColIndex + 1);
         }
@@ -27,9 +27,11 @@ public class PlayerController : ModelBase
 
     private void PlayerMove(int targetRow, int targetCol)
     {
-        if(targetRow < 0 || targetCol < 0 || targetRow > GameApp.MapManager.TotalRowCount || targetCol > GameApp.MapManager.TotalColCount) { return; }
+        if(targetRow < 0 || targetCol < 0 || targetRow >= GameApp.MapManager.TotalRowCount || targetCol >= GameApp.MapManager.TotalColCount) { return; }
 
         if (isMoving) return;
+
+        if (GameApp.CommandManager.isStop) return;
 
         GameApp.CommandManager.AddCommand(new MoveCommand(this, targetRow, targetCol));
     }
