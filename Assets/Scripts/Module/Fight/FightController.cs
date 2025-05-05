@@ -20,6 +20,13 @@ public class FightController : BaseController
             parentTf = GameApp.ViewManager.canvasTf,
             Sorting_Order = 4
         });
+        GameApp.ViewManager.Register(ViewType.PlayerDesView, new ViewInfo()
+        {
+            PrefabName = "PlayerDesView",
+            controller = this,
+            parentTf = GameApp.ViewManager.canvasTf,
+            Sorting_Order = 3
+        });
 
 
         InitModuleEvent();

@@ -18,6 +18,7 @@ public class GameApp : Singleton<GameApp>
     public static MapManager MapManager;
     public static CommandManager CommandManager;
     public static EnemyManager EnemyManager;
+    public static PlayerManager PlayerManager;  
 
     public override void Init()
     {
@@ -32,6 +33,7 @@ public class GameApp : Singleton<GameApp>
         MapManager = new MapManager();
         CommandManager = new CommandManager();
         EnemyManager = new EnemyManager();
+        PlayerManager = new PlayerManager();
     }
 
     public override void Update(float dt)

@@ -12,5 +12,6 @@ public enum ViewType
     MessageView,
     LoadingView,
     TipView,
-    EscView
+    EscView,
+    PlayerDesView
 }
