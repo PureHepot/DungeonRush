@@ -24,6 +24,31 @@ public class ModelBase : MonoBehaviour
         animator = transform.Find("body").GetComponent<Animator>();
     }
 
+    private void Update()
+    {
+        OnUpdate();
+    }
+
+    protected virtual void OnUpdate()
+    {
+
+    }
+
+    private void FixedUpdate()
+    {
+        OnFixedUpdate();
+    }
+
+    protected virtual void OnFixedUpdate()
+    {
+
+    }
+
+    public void Init()
+    {
+        GameApp.MapManager.GetCellPos(this, transform.position);
+    }
+
     public void Flip()
     {
         Vector3 scale = transform.localScale;
@@ -49,8 +74,6 @@ public class ModelBase : MonoBehaviour
 
         if (Vector3.Distance(transform.position, pos) <= 0.02f)
         {
-            this.RowIndex = rowIndex;
-            this.ColIndex = colIndex;
             transform.position = pos;
             return true;
         }

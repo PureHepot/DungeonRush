@@ -20,6 +20,13 @@ public class MoveCommand : BaseCommand
         model.isMoving = true;
     }
 
+    public override void Do()
+    {
+        base.Do();
+        model.RowIndex = targetRow;
+        model.ColIndex = targetCol;
+    }
+
     public override bool Update(float dt)
     {
         if (model.Move(targetRow, targetCol, 6*dt))

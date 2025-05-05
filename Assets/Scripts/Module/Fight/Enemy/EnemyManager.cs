@@ -45,7 +45,8 @@ public class EnemyManager
         }
         foreach (Enemy enemy in enemies)
         {
-            enemy.current.Do();
+            if(enemy.current != null)
+                enemy.current.Do();
         }
     }
 

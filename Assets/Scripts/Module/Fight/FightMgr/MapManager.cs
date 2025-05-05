@@ -50,9 +50,9 @@ public class MapManager
             o.RowIndex = row;
             o.ColIndex = col;
             o.transform.position = tilemap.CellToWorld(temp[i]) + new Vector3(0.5f, 0.5f, 0);
-
             mapArr[row, col] = o;
         }
+        GameApp.EnemyManager.GetSceneEnemy();
     }
 
     public Vector3 GetBlockPos(int row, int col)
@@ -68,5 +68,13 @@ public class MapManager
     public void ChangeBlockType(int row, int col, BlockType type)
     {
         mapArr[row, col].Type = type;
+    }
+
+    public void GetCellPos(ModelBase model, Vector3 pos)
+    {
+        Vector3Int t = tilemap.WorldToCell(pos);
+        model.RowIndex = t.x;
+        model.ColIndex = t.y;
+        Debug.Log($"R{model.RowIndex},C{model.ColIndex}");
     }
 }

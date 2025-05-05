@@ -41,6 +41,8 @@ public class CommandManager
             {
                 current = willDoCommandQueue.Dequeue();
                 current.Do();//Ö´ÐÐ
+
+                GameApp.EnemyManager.GenerateEnemyCommand();
             }
         }
         else

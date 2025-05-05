@@ -5,9 +5,14 @@ using UnityEngine;
 public class PlayerController : ModelBase
 {
 
-    private void Update()
+    protected override void OnUpdate()
     {
-        if(Input.GetKey(KeyCode.W))
+        GameApp.CameraManager.SetPos(transform.position);
+    }
+
+    protected override void OnFixedUpdate()
+    {
+        if (Input.GetKey(KeyCode.W))
         {
             PlayerMove(RowIndex + 1, ColIndex);
         }
@@ -32,7 +37,7 @@ public class PlayerController : ModelBase
         if (isMoving) return;
 
         if (GameApp.CommandManager.isStop) return;
-
+        
         GameApp.CommandManager.AddCommand(new MoveCommand(this, targetRow, targetCol));
     }
 }
