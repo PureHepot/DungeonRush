@@ -33,6 +33,8 @@ public class Enemy : ModelBase
 
         if (isMoving) return;
 
+        GameApp.MapManager.ChangeBlockType(RowIndex, ColIndex, BlockType.floor);
+
         current = new MoveCommand(this, targetRow, targetCol);
     }
 }

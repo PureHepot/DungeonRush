@@ -30,7 +30,7 @@ public class GameScene : MonoBehaviour
 
         RegisterConfigs();
 
-        //GameApp.ConfigManager.LoadAllConfigs();
+        GameApp.ConfigManager.LoadAllConfigs();
 
         //GameApp.SoundManager.PlayBGM("login");
 
@@ -56,7 +56,7 @@ public class GameScene : MonoBehaviour
 
     void RegisterConfigs()
     {
-        
+        GameApp.ConfigManager.Register("skill", new ConfigData("skill"));
     }
 
     private void Update()

@@ -37,7 +37,11 @@ public class PlayerController : ModelBase
         if (isMoving) return;
 
         if (GameApp.CommandManager.isStop) return;
-        
+
+        GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
+
+        GameApp.MapManager.ChangeBlockType(RowIndex, ColIndex, BlockType.floor);
+
         GameApp.CommandManager.AddCommand(new MoveCommand(this, targetRow, targetCol));
     }
 }

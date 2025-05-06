@@ -1,0 +1,4 @@
+Id,Name,Des,Type,Number,Target,Range,RangeType
+1001,SuperArm,Super Arm! Super Damage!,attack,4,enemy,1,circle
+1002,SpuerLeg,Super Leg! Super Speed!,attack,1,enemy,3,distance
+1003,SuperHeart,Self Healing!,heal,1,player,-,-

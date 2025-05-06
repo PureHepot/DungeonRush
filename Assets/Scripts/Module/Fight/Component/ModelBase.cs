@@ -87,4 +87,9 @@ public class ModelBase : MonoBehaviour
     {
         animator.Play(aniName);
     }
+
+    public void ChangePos(int row, int col)
+    {
+        transform.position = GameApp.MapManager.GetBlockPos(row, col);
+    }
 }

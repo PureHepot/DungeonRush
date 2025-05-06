@@ -77,4 +77,30 @@ public class MapManager
         model.ColIndex = t.y;
         Debug.Log($"R{model.RowIndex},C{model.ColIndex}");
     }
+
+    //显示移动区域
+    public void ShowStepGrid(ModelBase model, int step)
+    {
+        _BFS bfs = new _BFS(TotalRowCount, TotalColCount);
+
+        List<_BFS.Point> points = bfs.Search(model.RowIndex, model.ColIndex, step);
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            mapArr[points[i].RowIndex, points[i].ColIndex].ShowGrid(new Color(0,234f/255f,234f/255f,0.5f));
+        }
+    }
+
+    //隐藏移动的区域
+    public void HideStepGrid(ModelBase model, int step)
+    {
+        _BFS bfs = new _BFS(TotalRowCount, TotalColCount);
+
+        List<_BFS.Point> points = bfs.Search(model.RowIndex, model.ColIndex, step);
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            mapArr[points[i].RowIndex, points[i].ColIndex].HideGrid();
+        }
+    }
 }

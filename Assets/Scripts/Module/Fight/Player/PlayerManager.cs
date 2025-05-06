@@ -7,7 +7,19 @@ using UnityEngine;
 /// </summary>
 public class PlayerManager
 {
-    public ModelBase player;
+    private PlayerController player;
+    public PlayerController Player
+    {
+        get
+        {
+            if (player == null)
+            {
+                player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            }
+            return player;
+        }
+    }
+
 
     public int playerMaxHP;
     private int playerHP;
@@ -33,6 +45,8 @@ public class PlayerManager
     public bool hasLeg;
     public bool hasArm;
     public bool hasHeart;
+
+    public Dictionary<int, Dictionary<string, string>> datas;
 
     public PlayerManager()
     {

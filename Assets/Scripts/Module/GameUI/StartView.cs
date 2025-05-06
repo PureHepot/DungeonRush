@@ -25,6 +25,7 @@ public class StartView : BaseView
         {
             GameApp.ViewManager.Open(ViewType.PlayerDesView);
             GameApp.ViewManager.Close(ViewId);
+            GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();
         });
     }
     private void onSettingBtn()

@@ -19,16 +19,16 @@ public class ConfigData
 
     public TextAsset LoadFile()
     {
-        return Resources.Load<TextAsset>($"Data/{fileName}");
+        return Resources.Load<TextAsset>($"config/{fileName}");
     }
 
     //读取
     public void Load(string txt)
     {
-        string[] dataArr = txt.Split("\n");
+        string[] dataArr = txt.Split("\r\n");
         string[] titleArr = dataArr[0].Trim().Split(',');//去掉首尾空格然后分割出每行字典中的key
 
-        for (int i = 2; i < dataArr.Length; i++)
+        for (int i = 1; i < dataArr.Length; i++)
         {
             string[] tempArr = dataArr[i].Trim().Split(',');
             Dictionary<string, string> tempData = new Dictionary<string, string>();
