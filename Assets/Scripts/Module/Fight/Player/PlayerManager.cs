@@ -9,8 +9,26 @@ public class PlayerManager
 {
     public ModelBase player;
 
-    public int playerHP;
-    public int playerEnegy;
+    public int playerMaxHP;
+    private int playerHP;
+    public int PlayerHP
+    {
+        get { return playerHP; }
+        set
+        {
+            playerHP = Mathf.Clamp(value,0,playerMaxHP);
+        }
+    }
+    public int playerMaxEnergy;
+    private int playerEnergy;
+    public int PlayerEnergy
+    {
+        get { return playerEnergy; }
+        set
+        {
+            playerEnergy = Mathf.Clamp(value,0,playerMaxEnergy);
+        }
+    }
     public bool isDead;
     public bool hasLeg;
     public bool hasArm;
@@ -18,7 +36,8 @@ public class PlayerManager
 
     public PlayerManager()
     {
-        playerHP = 6;
+        playerHP = playerMaxHP = 6;
+        playerEnergy = playerMaxEnergy = 5;
         isDead = false;
         hasLeg = false;
         hasArm = false;

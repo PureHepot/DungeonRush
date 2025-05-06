@@ -104,6 +104,10 @@ public class BaseView : MonoBehaviour, IBaseView
         {
             return m_cache_gos[res];
         }
+        if (transform.Find(res).gameObject == null)
+        {
+            return null;
+        }
         m_cache_gos.Add(res,transform.Find(res).gameObject);//只能找到第一层的物体
         return m_cache_gos[res] as GameObject;
     }
@@ -111,6 +115,8 @@ public class BaseView : MonoBehaviour, IBaseView
     public T Find<T>(string res) where T : Component
     {
         GameObject obj = Find(res);
+        if (obj == null)
+            return null;
         return obj.GetComponent<T>();
     }
 }

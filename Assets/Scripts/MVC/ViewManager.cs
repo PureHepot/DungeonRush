@@ -113,6 +113,11 @@ public class ViewManager
         return null;
     }
 
+    public T GetView<T>(ViewType type) where T : class, IBaseView
+    {
+        return GetView<T>((int)type);
+    }
+
 
     public void Destroy(int key)
     {

@@ -13,5 +13,6 @@ public enum ViewType
     LoadingView,
     TipView,
     EscView,
-    PlayerDesView
+    PlayerDesView,
+    SkillView
 }

@@ -62,12 +62,17 @@ public class ControllerManager
     }
 
     //跨模板触发消息
-    public void ApplyFunc(int controllerKey, string eventName, System.Object[] args)
+    public void ApplyFunc(int controllerKey, string eventName, params object[] args)
     {
         if (_modules.ContainsKey(controllerKey))
         {
             _modules[controllerKey].ApplyFunc(eventName, args);
         }
+    }
+    public void ApplyFunc(ControllerType type, string eventName, params object[] args)
+    {
+        int key = (int)type;
+        ApplyFunc(key, eventName, args);
     }
 
     //获取某个控制器的Model对象

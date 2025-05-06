@@ -18,7 +18,7 @@ public class FightController : BaseController
             PrefabName = "EscView",
             controller = this,
             parentTf = GameApp.ViewManager.canvasTf,
-            Sorting_Order = 4
+            Sorting_Order = 7
         });
         GameApp.ViewManager.Register(ViewType.PlayerDesView, new ViewInfo()
         {
@@ -26,6 +26,13 @@ public class FightController : BaseController
             controller = this,
             parentTf = GameApp.ViewManager.canvasTf,
             Sorting_Order = 3
+        });
+        GameApp.ViewManager.Register(ViewType.SkillView, new ViewInfo()
+        {
+            PrefabName = "SkillView",
+            controller = this,
+            parentTf = GameApp.ViewManager.canvasTf,
+            Sorting_Order = 4
         });
 
 
@@ -35,11 +42,23 @@ public class FightController : BaseController
     public override void InitModuleEvent()
     {
         RegisterFunc(Defines.BeginFight, onBeginFight);
+        RegisterFunc(Defines.OnPlayerHpChange, onPlayerHpChange);
+        RegisterFunc(Defines.OnPlayerEnergyChange, onPlayerEnergyChange);
     }
 
     public void onBeginFight(object[] args)
     {
         GameApp.MapManager.Init();
         GameApp.ViewManager.Open(ViewType.TipView, "Level 1");
+    }
+    public void onPlayerHpChange(object[] args)
+    {
+        int count = (int)args[0];
+        GameApp.ViewManager.GetView<PlayerDesView>(ViewType.PlayerDesView).ChangeHealth(count);
+    }
+    public void onPlayerEnergyChange(object[] args)
+    {
+        int count = (int)args[0];
+        GameApp.ViewManager.GetView<PlayerDesView>(ViewType.PlayerDesView).ChangeEnergy(count);
     }
 }

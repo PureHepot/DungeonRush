@@ -49,5 +49,18 @@ public class UserInputManager
             }
                 
         }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerHpChange, 1);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Tab))
+        {
+            GameApp.ViewManager.Open(ViewType.SkillView);
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            GameApp.ViewManager.Close(ViewType.SkillView);
+        }
     }
 }

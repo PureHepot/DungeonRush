@@ -27,4 +27,8 @@ public static class Defines
     public static readonly string OnIdleEvent = "OnIdleEvent";
     public static readonly string OnCancelEvent = "OnCancelEvent";
     public static readonly string OnRemoveHeroToSceneEvent = "OnRemoveHeroToSceneEvent";
+
+    //ÊÓÍ¼ÊÂ¼þ
+    public static readonly string OnPlayerHpChange = "OnPlayerHpChange";
+    public static readonly string OnPlayerEnergyChange = "OnPlayerEnergyChange";
 }
