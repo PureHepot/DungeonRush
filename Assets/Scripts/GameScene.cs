@@ -57,6 +57,7 @@ public class GameScene : MonoBehaviour
     void RegisterConfigs()
     {
         GameApp.ConfigManager.Register("skill", new ConfigData("skill"));
+        GameApp.ConfigManager.Register("enemy", new ConfigData("enemy"));
     }
 
     private void Update()

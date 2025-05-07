@@ -23,7 +23,7 @@ public class EnemyManager
         foreach (GameObject t in tenemys)
         {
             Enemy enemy = t.GetComponent<Enemy>();
-            enemy.Id = enemyCount++;
+            //enemy.Id = enemyCount++;
             enemies.Add(enemy);
         }
     }

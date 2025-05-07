@@ -43,7 +43,7 @@ public class PlayerDesView : BaseView
     public void ChangeHealth(int count)
     {
         int lastHp = GameApp.PlayerManager.PlayerHP;
-        GameApp.PlayerManager.PlayerHP -= count;
+        GameApp.PlayerManager.PlayerHP += count;
         int currentHp = GameApp.PlayerManager.PlayerHP;
         if (lastHp > currentHp) 
         {
@@ -59,7 +59,7 @@ public class PlayerDesView : BaseView
         }
         else
         {
-            for (int i = lastHp; i < currentHp; i++)
+            for (int i = lastHp-1; i < currentHp; i++)
             {
                 lifeImgs[i].enabled = false;
                 lifeImgs[i].material = blink;
@@ -70,10 +70,11 @@ public class PlayerDesView : BaseView
     public void ChangeEnergy(int count)
     {
         int lastEn = GameApp.PlayerManager.PlayerEnergy;
-        int currentEn = (GameApp.PlayerManager.PlayerEnergy -= count);
+        GameApp.PlayerManager.PlayerEnergy += count;
+        int currentEn = GameApp.PlayerManager.PlayerEnergy;
         if (lastEn > currentEn)
         {
-            for (int i = currentEn - 1; i < lastEn; i++)
+            for (int i = currentEn; i < lastEn; i++)
             {
                 int idx = i;
                 energyImgs[idx].enabled = true;
@@ -85,7 +86,7 @@ public class PlayerDesView : BaseView
         }
         else
         {
-            for (int i = lastEn - 1; i < currentEn; i++)
+            for (int i = lastEn; i < currentEn; i++)
             {
                 energyImgs[i].enabled = false;
                 energyImgs[i].material = blink;

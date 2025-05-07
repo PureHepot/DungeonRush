@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class CameraManager
@@ -16,7 +17,7 @@ public class CameraManager
     public void SetPos(Vector3 pos)
     {
         pos.z = camTf.position.z;
-        camTf.transform.position = pos;
+        camTf.transform.DOMove(pos,0.5f);
     }
 
     public void ResetPos()

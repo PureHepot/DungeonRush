@@ -37,8 +37,8 @@ public class EscView : BaseView
         LoadSomeScene.LoadtheScene(Controller,"game", () =>{ },
         () =>
         {
+            GameApp.ViewManager.CloseAll();
             GameApp.ViewManager.Open(ViewType.StartView);
-            GameApp.ViewManager.Close(ViewId);
         });
     }
 

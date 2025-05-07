@@ -58,5 +58,8 @@ public class PlayerManager
         hasHeart = false;
     }
 
-
+    public float GetDistance(ModelBase model)
+    {
+        return Mathf.Sqrt(Mathf.Pow(model.RowIndex - player.RowIndex, 2) + Mathf.Pow(model.ColIndex - player.ColIndex, 2));
+    }
 }

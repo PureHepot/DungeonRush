@@ -5,7 +5,7 @@ using UnityEngine;
 public class FlashCommand : BaseCommand
 {
     private Block block;
-    private float flashTime = 0.25f;
+    private float flashTime = 0.15f;
     private float flashCount = 0;
 
     public FlashCommand(ModelBase model, Block block) : base(model)
@@ -19,6 +19,9 @@ public class FlashCommand : BaseCommand
         base.Do();
         this.model.RowIndex = this.block.RowIndex;
         this.model.ColIndex = this.block.ColIndex;
+        GameApp.MapManager.ChangeBlockType(model.RowIndex, model.RowIndex,BlockType.floor);
+        GameApp.MapManager.ChangeBlockType(block.RowIndex, block.RowIndex,BlockType.obstacle);
+        GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, -5);
     }
 
     public override bool Update(float dt)

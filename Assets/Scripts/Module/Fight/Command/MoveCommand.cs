@@ -25,6 +25,8 @@ public class MoveCommand : BaseCommand
         base.Do();
         model.RowIndex = targetRow;
         model.ColIndex = targetCol;
+
+        GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, 1);
     }
 
     public override bool Update(float dt)

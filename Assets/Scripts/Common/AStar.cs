@@ -128,6 +128,11 @@ public class AStar
         }
     }
 
+    /// <summary>
+    /// 从末位置找到完整的路径
+    /// </summary>
+    /// <param name="point">末位置，需要有父亲点信息</param>
+    /// <returns></returns>
     public List<AStarPoint> GetPath(AStarPoint point)
     {
         List<AStarPoint> path = new List<AStarPoint>();
@@ -171,7 +176,7 @@ public class AStar
     public void AddOpen(AStarPoint current, int row, int col)
     {
         //不在open和close 并且不能是障碍物才能加入open
-        if (IsInClose(row, col) == false && IsInOpen(row, col) == null && GameApp.MapManager.GetBlockType(row, col) == BlockType.empty)
+        if (IsInClose(row, col) == false && IsInOpen(row, col) == null)//&& GameApp.MapManager.GetBlockType(row, col) != BlockType.obstacle
         {
             AStarPoint newPoint = new AStarPoint(row, col, current);
             newPoint.G = newPoint.GetG();

@@ -156,7 +156,8 @@ public class ViewManager
         List<IBaseView> list = _opens.Values.ToList();
         for (int i = list.Count - 1; i >= 0; i--)
         {
-            Close(list[i].ViewId);
+            if(list[i].ViewId!=(int)ViewType.LoadingView)
+                Close(list[i].ViewId);
         }
     }
 

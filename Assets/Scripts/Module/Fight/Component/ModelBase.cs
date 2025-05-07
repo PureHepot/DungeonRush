@@ -23,6 +23,14 @@ public class ModelBase : MonoBehaviour
         bodySp = transform.Find("body").GetComponent<SpriteRenderer>();
         animator = transform.Find("body").GetComponent<Animator>();
     }
+    private void Start()
+    {
+        OnStart();
+    }
+    protected virtual void OnStart()
+    {
+
+    }
 
     private void Update()
     {

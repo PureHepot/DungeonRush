@@ -51,7 +51,7 @@ public class UserInputManager
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
-            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerHpChange, 1);
+            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerHpChange, -1);
         }
 
         if(Input.GetKeyDown(KeyCode.Tab))

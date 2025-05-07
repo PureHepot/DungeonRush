@@ -39,9 +39,9 @@ public class SkillView : BaseView
         for (int i = 0; i < skills.Length; i++)
         {
             int idx = i;
-            GameApp.TimerManager.Register(0.1f, () =>
+            GameApp.TimerManager.Register(0.05f, () =>
             {
-                skills[idx].DOAnchorPos(endPos[idx], 0.3f);
+                skills[idx].DOAnchorPos(endPos[idx], 0.15f);
             });
         }
 
@@ -52,12 +52,12 @@ public class SkillView : BaseView
         for (int i = 0; i < skills.Length; i++)
         {
             int idx = i;
-            GameApp.TimerManager.Register(0.2f, () =>
+            GameApp.TimerManager.Register(0.05f, () =>
             {
                 skills[idx].DOAnchorPos(startPos[idx], 0.1f);
             });
         }
-        GameApp.TimerManager.Register(0.3f, () =>
+        GameApp.TimerManager.Register(0.15f, () =>
         {
             SetVisible(false);
         });
@@ -69,6 +69,7 @@ public class SkillView : BaseView
 
         Find<Button>("skill1").onClick.AddListener(onSkill1);
         Find<Button>("skill2").onClick.AddListener(onSkill2);
+        Find<Button>("skill3").onClick.AddListener(onSkill3);
     }
 
     private void onSkill1()
@@ -78,6 +79,25 @@ public class SkillView : BaseView
 
     private void onSkill2()
     {
-        GameApp.MapManager.ShowStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
+        if (GameApp.PlayerManager.PlayerEnergy >= 5)
+        {
+            GameApp.MapManager.ShowStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
+            GameApp.ViewManager.Close(ViewId);
+        }
+        else
+        {
+            Find<Transform>("skill2").DOShakePosition(0.3f, 20f, 90);
+        }
+    }
+
+    private void onSkill3()
+    {
+        if (GameApp.PlayerManager.PlayerEnergy >= 4)
+        {
+            GameApp.CommandManager.AddCommand(new HealCommand(GameApp.PlayerManager.Player));
+            GameApp.ViewManager.Close(ViewId);
+        }
+        else
+            Find<Transform>("skill3").DOShakePosition(0.3f, 20f, 90);
     }
 }
