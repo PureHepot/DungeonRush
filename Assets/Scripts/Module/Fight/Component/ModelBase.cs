@@ -100,4 +100,20 @@ public class ModelBase : MonoBehaviour
     {
         transform.position = GameApp.MapManager.GetBlockPos(row, col);
     }
+
+    public void Face2Cell(int row, int col)
+    {
+        Vector3 pos = GameApp.MapManager.GetBlockPos(row, col);
+
+        pos.z = transform.position.z;
+
+        if (transform.position.x > pos.x && transform.localScale.x > 0)
+        {
+            Flip();
+        }
+        if (transform.position.x < pos.x && transform.localScale.x < 0)
+        {
+            Flip();
+        }
+    }
 }
