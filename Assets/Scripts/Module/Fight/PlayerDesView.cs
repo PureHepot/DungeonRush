@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,7 @@ public class PlayerDesView : BaseView
     public void ChangeHealth(int count)
     {
         int lastHp = GameApp.PlayerManager.PlayerHP;
+        if (lastHp <= 0) return;
         GameApp.PlayerManager.PlayerHP += count;
         int currentHp = GameApp.PlayerManager.PlayerHP;
         if (lastHp > currentHp) 
@@ -51,6 +53,8 @@ public class PlayerDesView : BaseView
             {
                 int idx = i;
                 lifeImgs[idx].enabled = true;
+                GameApp.CameraManager.CameraShake();
+                GameApp.PlayerManager.Player.PlayAni("Hit");
                 GameApp.TimerManager.Register(0.1f, () =>
                 {
                     lifeImgs[idx].material = lit2d;
@@ -78,6 +82,7 @@ public class PlayerDesView : BaseView
             {
                 int idx = i;
                 energyImgs[idx].enabled = true;
+                
                 GameApp.TimerManager.Register(0.1f, () =>
                 {
                     energyImgs[idx].material = lit2d;

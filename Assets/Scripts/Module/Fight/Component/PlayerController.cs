@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PlayerController : ModelBase
 {
+    protected override void OnStart()
+    {
+        base.OnStart();
+
+        Attack = 1;
+    }
 
     protected override void OnUpdate()
     {
@@ -38,10 +44,25 @@ public class PlayerController : ModelBase
 
         if (GameApp.CommandManager.isStop) return;
 
+        Enemy enemy = FindEnemyInPos(targetRow, targetCol);
+        if (enemy)
+        {
+            PlayerAttack(enemy);
+            return;
+        }
+
         GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
 
-        GameApp.MapManager.ChangeBlockType(RowIndex, ColIndex, BlockType.floor);
-
         GameApp.CommandManager.AddCommand(new MoveCommand(this, targetRow, targetCol));
+    }
+
+    private Enemy FindEnemyInPos(int row, int col)
+    {
+        return GameApp.EnemyManager.GetEnemybyPos(row, col);
+    }
+
+    private void PlayerAttack(Enemy enemy)
+    {
+        GameApp.CommandManager.AddCommand(new AttackCommand(this, enemy, Attack));
     }
 }

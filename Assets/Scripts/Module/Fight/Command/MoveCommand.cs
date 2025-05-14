@@ -23,10 +23,12 @@ public class MoveCommand : BaseCommand
     public override void Do()
     {
         base.Do();
+        GameApp.MapManager.ChangeBlockType(model.RowIndex, model.ColIndex, BlockType.floor);
         model.RowIndex = targetRow;
         model.ColIndex = targetCol;
 
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, 1);
+        model.PlayAni("Move");
     }
 
     public override bool Update(float dt)
@@ -39,7 +41,7 @@ public class MoveCommand : BaseCommand
             return true;
         }
         
-        model.PlayAni("Move");
+        
         return false;
     }
 }

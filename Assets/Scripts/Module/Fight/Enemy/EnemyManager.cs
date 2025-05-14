@@ -27,6 +27,19 @@ public class EnemyManager
             enemies.Add(enemy);
         }
     }
+
+    public Enemy GetEnemybyPos(int row, int col)
+    {
+        foreach (Enemy enemy in enemies)
+        {
+            if (enemy.RowIndex == row && enemy.ColIndex == col)
+            {
+                return enemy;
+            }
+        }
+        return null;
+    }
+
     public void AddEnmey(Enemy enemy)
     {
         enemies.Add(enemy);

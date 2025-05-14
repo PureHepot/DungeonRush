@@ -45,6 +45,18 @@ public class PlayerManager
     public bool hasLeg;
     public bool hasArm;
     public bool hasHeart;
+    private SpriteRenderer bodySp;
+    public SpriteRenderer BodySp
+    {
+        get
+        {
+            if (bodySp == null)
+            {
+                bodySp = GameObject.FindWithTag("Player").GetComponentInChildren<SpriteRenderer>();
+            }
+            return bodySp;
+        }
+    }
 
     public Dictionary<int, Dictionary<string, string>> datas;
 

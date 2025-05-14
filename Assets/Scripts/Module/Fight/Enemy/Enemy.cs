@@ -5,9 +5,11 @@ using UnityEngine;
 public enum EnemyState
 {
     Idle,
-    Find,
+    Observe,
     Chase,
     Preattack,
+    Normal,
+    Attack,
     Run
 }
 
@@ -21,11 +23,14 @@ public class Enemy : ModelBase
     public BaseCommand lastCommand;
     public BaseCommand current;
 
-    public Sprite normalSp;
-    public Sprite preatkSp;
+    //public Sprite normalSp;
+    //public Sprite preatkSp;
     public int Step;
     public int AttackRange;
     public int VisionDis;
+    public int ObserInterval;
+    public int obserTime;
+    public int type;
 
     protected EnemyState currentState;
 
@@ -39,8 +44,9 @@ public class Enemy : ModelBase
         CurHp = MaxHp = int.Parse(data["Hp"]);
         Step = int.Parse(data["MoveStep"]);
         VisionDis = int.Parse(data["VisionDis"]);
-        normalSp = Resources.Load<Sprite>("Arts/enemySprite/" + data["NormalSpr"]);
-        preatkSp = Resources.Load<Sprite>("Arts/enemySprite/" + data["PreAtkSpr"]);
+        ObserInterval = int.Parse(data["ObInterval"]);
+        //normalSp = Resources.Load<Sprite>("Arts/enemySprite/" + data["NormalSpr"]);
+        //preatkSp = Resources.Load<Sprite>("Arts/enemySprite/" + data["PreAtkSpr"]);
     }
 
 
@@ -55,9 +61,7 @@ public class Enemy : ModelBase
 
         if (isMoving) return;
 
-        GameApp.MapManager.ChangeBlockType(RowIndex, ColIndex, BlockType.floor);
-
-        current = new EnemyMoveCommand(this, targetRow, targetCol);
+        current = new EnemyMoveCommand(this, targetRow, targetCol, type);
     }
 
     protected void ChangeEnemyState(EnemyState state)

@@ -1,23 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Evil : Enemy
 {
+    public List<AStarPoint> paths;
+    public int pathIndex;
+    
+
+
     public override void GenerateCommand()
     {
         base.GenerateCommand();
+
+        if (GameApp.PlayerManager.GetDistance(this) <= AttackRange && type == 1)
+        {
+            ChangeEnemyState(EnemyState.Attack);
+        }
+
         switch (currentState)
         {
             case EnemyState.Idle:
                 onIdleState();
                 break;
+            case EnemyState.Observe:
+                onObserveState();
+                break;
             case EnemyState.Chase:
                 onChaseState();
+                break;
+            case EnemyState.Preattack:
+                onPreattackState();
+                break;
+            case EnemyState.Attack:
+                onAttackState();
                 break;
         }
     }
 
+    private void onAttackState()
+    {
+        current = new EnemyAttackCommand(this, Attack);
+        ChangeEnemyState(EnemyState.Idle);
+    }
 
     private void onIdleState()
     {
@@ -31,7 +57,7 @@ public class Evil : Enemy
         }
         if (GameApp.PlayerManager.GetDistance(this) <= VisionDis)
         {
-            ChangeEnemyState(EnemyState.Chase);
+            ChangeEnemyState(EnemyState.Observe);
         }
     }
     private void RandomMove()
@@ -54,18 +80,64 @@ public class Evil : Enemy
         }
     }
 
-    private void onChaseState()
+    private void ChangeType()
+    {
+        if(type == 0) type = 1;
+        if(type == 1) type = 0;
+    }
+
+    private void onObserveState()
     {
         AStar astar = new AStar(GameApp.MapManager.TotalRowCount, GameApp.MapManager.TotalColCount);
-        astar.FindPath(new AStarPoint(RowIndex, ColIndex), new AStarPoint(GameApp.PlayerManager.Player.RowIndex, GameApp.PlayerManager.Player.ColIndex),Move2Player);
+        astar.FindPath(new AStarPoint(RowIndex, ColIndex), new AStarPoint(GameApp.PlayerManager.Player.RowIndex, GameApp.PlayerManager.Player.ColIndex), GetPath);
+        pathIndex = 0;
+        current = new EnemyObserveCommand(this, GameApp.PlayerManager.Player.RowIndex, GameApp.PlayerManager.Player.ColIndex);
+
+        int t = Random.Range(0, 10);
+        if (t < 3) type = 1;
+        else type = 0;
+
+        ChangeEnemyState(EnemyState.Chase);
+    }
+
+    private void onChaseState()
+    {
+        if (obserTime > ObserInterval)
+        {
+            obserTime = 0;
+            ChangeEnemyState(EnemyState.Observe);
+        }
+        Debug.Log(obserTime);
+        pathIndex++;
+        if (pathIndex < paths.Count)
+        {
+            current = new EnemyMoveCommand(this, paths[pathIndex].RowIndex, paths[pathIndex].ColIndex);
+        }
+        
+        obserTime += 1;
+
         if (GameApp.PlayerManager.GetDistance(this) > VisionDis)
         {
             ChangeEnemyState(EnemyState.Idle);
         }
+        else if (GameApp.PlayerManager.GetDistance(this) <= AttackRange+1)
+        {
+            ChangeEnemyState(EnemyState.Preattack);
+        }
     }
 
-    private void Move2Player(List<AStarPoint> path)
+    private void GetPath(List<AStarPoint> path)
     {
-        current = new EnemyMoveCommand(this, path[1].RowIndex, path[1].ColIndex);
+        paths = path;
+    }
+
+    private void onPreattackState()
+    {
+        type = 1;
+        if (Random.Range(0, 2) == 0)
+        {
+            RandomMove();
+        }
+
     }
 }

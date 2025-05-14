@@ -24,4 +24,9 @@ public class CameraManager
     {
         camTf.transform.position = prePos;
     }
+
+    public void CameraShake()
+    {
+        camTf.DOShakePosition(0.5f, 3f, 10);
+    }
 }
