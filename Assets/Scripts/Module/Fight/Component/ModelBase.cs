@@ -17,6 +17,7 @@ public class ModelBase : MonoBehaviour
     public SpriteRenderer bodySp;//身体图片渲染组件
     public Animator animator;//动画组件
     public bool isMoving;
+    public bool isAttacking;
 
     private void Awake()
     {

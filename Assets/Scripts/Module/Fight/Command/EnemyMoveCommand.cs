@@ -28,6 +28,7 @@ public class EnemyMoveCommand : BaseCommand
         GameApp.MapManager.ChangeBlockType(model.RowIndex, model.ColIndex, BlockType.floor);
         model.RowIndex = targetRow;
         model.ColIndex = targetCol;
+        GameApp.MapManager.ChangeBlockType(targetRow, targetCol, BlockType.enemy);
     }
 
     public override bool Update(float dt)
@@ -45,7 +46,6 @@ public class EnemyMoveCommand : BaseCommand
         {
             model.isMoving = false;
             model.PlayAni(IdleAnim);
-            GameApp.MapManager.ChangeBlockType(targetRow, targetCol, BlockType.obstacle);
             return true;
         }
         

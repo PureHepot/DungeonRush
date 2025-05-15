@@ -20,6 +20,22 @@ public class PlayerManager
         }
     }
 
+    public int playerRow
+    {
+        get
+        {
+            return player.RowIndex;
+        }
+    }
+
+    public int playerCol
+    {
+        get
+        {
+            return player.ColIndex;
+        }
+    }
+
 
     public int playerMaxHP;
     private int playerHP;

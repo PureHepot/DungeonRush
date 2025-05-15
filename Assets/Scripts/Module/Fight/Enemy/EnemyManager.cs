@@ -48,6 +48,7 @@ public class EnemyManager
     public void RemoveEnmey(Enemy enemy)
     {
         enemies.Remove(enemy);
+        GameObject.Destroy(enemy.gameObject,0.5f);
     }
 
     public void GenerateEnemyCommand()
@@ -60,6 +61,19 @@ public class EnemyManager
         {
             if(enemy.current != null)
                 enemy.current.Do();
+        }
+
+        List<Enemy> temp = new List<Enemy>();
+        foreach (Enemy enemy in enemies)
+        {
+            if (enemy.CurHp <= 0)
+            {
+                temp.Add(enemy);
+            }
+        }
+        foreach (var enemy in temp)
+        {
+            RemoveEnmey(enemy);
         }
     }
 

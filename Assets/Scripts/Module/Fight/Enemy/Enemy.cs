@@ -10,7 +10,9 @@ public enum EnemyState
     Preattack,
     Normal,
     Attack,
-    Run
+    Run,
+    Hit,
+    Dead
 }
 
 public class StateMachine
@@ -55,16 +57,26 @@ public class Enemy : ModelBase
         
     }
 
-    protected void EnemyMove(int targetRow, int targetCol)
+    protected virtual void EnemyMove(int targetRow, int targetCol)
     {
         if (targetRow < 0 || targetCol < 0 || targetRow >= GameApp.MapManager.TotalRowCount || targetCol >= GameApp.MapManager.TotalColCount) { return; }
 
         if (isMoving) return;
 
+        if (GameApp.MapManager.GetBlockType(targetRow, targetCol) != BlockType.floor) return;
+
         current = new EnemyMoveCommand(this, targetRow, targetCol, type);
     }
+    public virtual void EnemyBeAttacked(int damage)
+    {
+        CurHp-=damage;
+        if (CurHp <= 0) 
+            ChangeEnemyState(EnemyState.Dead);
+        else
+            ChangeEnemyState(EnemyState.Hit);
+    }
 
-    protected void ChangeEnemyState(EnemyState state)
+    protected void ChangeEnemyState(EnemyState state, params object[] args)
     {
         Debug.Log($"Change to {state.ToString()}");
         currentState = state;

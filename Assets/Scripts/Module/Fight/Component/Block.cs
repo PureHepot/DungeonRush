@@ -7,7 +7,9 @@ public enum BlockType
     birth,
     floor,
     obstacle,
-    empty
+    empty,
+    player,
+    enemy
 }
 
 public class Block : MonoBehaviour

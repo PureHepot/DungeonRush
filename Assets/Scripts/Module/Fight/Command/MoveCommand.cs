@@ -26,7 +26,7 @@ public class MoveCommand : BaseCommand
         GameApp.MapManager.ChangeBlockType(model.RowIndex, model.ColIndex, BlockType.floor);
         model.RowIndex = targetRow;
         model.ColIndex = targetCol;
-
+        GameApp.MapManager.ChangeBlockType(targetRow, targetCol, BlockType.player);
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, 1);
         model.PlayAni("Move");
     }
@@ -37,7 +37,6 @@ public class MoveCommand : BaseCommand
         {
             model.isMoving = false;
             model.PlayAni("Idle");
-            GameApp.MapManager.ChangeBlockType(targetRow, targetCol, BlockType.obstacle);
             return true;
         }
         

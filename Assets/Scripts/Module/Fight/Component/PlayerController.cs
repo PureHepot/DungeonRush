@@ -40,7 +40,7 @@ public class PlayerController : ModelBase
     {
         if(targetRow < 0 || targetCol < 0 || targetRow >= GameApp.MapManager.TotalRowCount || targetCol >= GameApp.MapManager.TotalColCount) { return; }
 
-        if (isMoving) return;
+        if (isMoving || isAttacking) return;
 
         if (GameApp.CommandManager.isStop) return;
 
@@ -63,6 +63,7 @@ public class PlayerController : ModelBase
 
     private void PlayerAttack(Enemy enemy)
     {
+        if(isAttacking) return;
         GameApp.CommandManager.AddCommand(new AttackCommand(this, enemy, Attack));
     }
 }

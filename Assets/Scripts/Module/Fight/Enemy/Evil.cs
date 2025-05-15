@@ -7,7 +7,7 @@ public class Evil : Enemy
 {
     public List<AStarPoint> paths;
     public int pathIndex;
-    
+    private int preAtkRound;
 
 
     public override void GenerateCommand()
@@ -36,13 +36,33 @@ public class Evil : Enemy
             case EnemyState.Attack:
                 onAttackState();
                 break;
+            case EnemyState.Hit:
+                onHitState();
+                break;
+            case EnemyState.Dead:
+                onDeadState();
+                break;
         }
+    }
+
+
+    private void onDeadState()
+    {
+        current = new EnemyDeadCommand(this);
+    }
+    private void onHitState()
+    {
+        current = new EnemyHitCommand(this);
+
+        ChangeEnemyState(EnemyState.Idle);
     }
 
     private void onAttackState()
     {
         current = new EnemyAttackCommand(this, Attack);
         ChangeEnemyState(EnemyState.Idle);
+        //ChangeType(0);
+        type = 0;
     }
 
     private void onIdleState()
@@ -80,10 +100,18 @@ public class Evil : Enemy
         }
     }
 
-    private void ChangeType()
+    private void ChangeType(int t)
     {
-        if(type == 0) type = 1;
-        if(type == 1) type = 0;
+        type = t;
+        switch (type)
+        {
+            case 0:
+                PlayAni("Idle");
+                break;
+            case 1:
+                PlayAni("preAtkIdle");
+                break;
+        }
     }
 
     private void onObserveState()
@@ -92,10 +120,18 @@ public class Evil : Enemy
         astar.FindPath(new AStarPoint(RowIndex, ColIndex), new AStarPoint(GameApp.PlayerManager.Player.RowIndex, GameApp.PlayerManager.Player.ColIndex), GetPath);
         pathIndex = 0;
         current = new EnemyObserveCommand(this, GameApp.PlayerManager.Player.RowIndex, GameApp.PlayerManager.Player.ColIndex);
-
-        int t = Random.Range(0, 10);
-        if (t < 3) type = 1;
-        else type = 0;
+        int t = Random.Range(0,10);
+        if (t <= 3)
+        {
+            pathIndex++;
+            if (pathIndex < paths.Count)
+            {
+                EnemyMove(paths[pathIndex].RowIndex, paths[pathIndex].ColIndex);
+            }
+        }
+        t = Random.Range(0, 10);
+        if (t < 3) ChangeType(1);
+        else ChangeType(0);
 
         ChangeEnemyState(EnemyState.Chase);
     }
@@ -111,7 +147,7 @@ public class Evil : Enemy
         pathIndex++;
         if (pathIndex < paths.Count)
         {
-            current = new EnemyMoveCommand(this, paths[pathIndex].RowIndex, paths[pathIndex].ColIndex);
+            EnemyMove(paths[pathIndex].RowIndex, paths[pathIndex].ColIndex);
         }
         
         obserTime += 1;
@@ -133,11 +169,17 @@ public class Evil : Enemy
 
     private void onPreattackState()
     {
-        type = 1;
-        if (Random.Range(0, 2) == 0)
+        ChangeType(1);
+        if (Random.Range(0, 3) == 1)
         {
             RandomMove();
         }
-
+        preAtkRound++;
+        if (preAtkRound >= 3)
+        {
+            preAtkRound = 0;
+            ChangeEnemyState(EnemyState.Idle);
+            ChangeType(0);
+        }
     }
 }
