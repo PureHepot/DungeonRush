@@ -1,6 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum EnemyType
+{
+    Evil,
+    Heart,
+    Leg,
+    Hand
+}
+
 
 /// <summary>
 /// 敌人的统一管理器，指令生成 指令执行
@@ -9,11 +19,23 @@ public class EnemyManager
 {
     public int enemyCount;
     public List<Enemy> enemies;
-
+    private Dictionary<EnemyType, GameObject> enemyPrefabs;
 
     public EnemyManager()
     {
         enemies = new List<Enemy>();
+        enemyPrefabs = new Dictionary<EnemyType, GameObject>();
+
+        GameObject[] tempObj = Resources.LoadAll<GameObject>("Assets/Resources/Prefabs/Model/Enemys");
+
+        foreach (GameObject obj in tempObj)
+        {
+            EnemyType type;
+            if (Enum.TryParse(obj.ToString(), out type))
+            {
+                enemyPrefabs[type] = obj;
+            }
+        }
     }
 
     public void GetSceneEnemy()
@@ -40,6 +62,15 @@ public class EnemyManager
         return null;
     }
 
+    public void CreatEnemy(EnemyType type, int row, int col)
+    {
+        if (GameApp.MapManager.GetBlockType(row, col) != BlockType.enemy)
+        {
+            Enemy enemy = GameObject.Instantiate(enemyPrefabs[type], GameApp.MapManager.GetBlockPos(row,col), Quaternion.identity).GetComponent<Enemy>();
+            AddEnmey(enemy);
+        }
+    }
+
     public void AddEnmey(Enemy enemy)
     {
         enemies.Add(enemy);
@@ -56,10 +87,7 @@ public class EnemyManager
         foreach (Enemy enemy in enemies)
         {
             enemy.GenerateCommand();
-        }
-        foreach (Enemy enemy in enemies)
-        {
-            if(enemy.current != null)
+            if (enemy.current != null)
                 enemy.current.Do();
         }
 

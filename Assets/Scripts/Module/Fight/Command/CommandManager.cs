@@ -43,6 +43,7 @@ public class CommandManager
                 current.Do();//Ö´ÐÐ
 
                 GameApp.EnemyManager.GenerateEnemyCommand();
+                GameApp.MapManager.PrickTrapUpdate();
             }
         }
         else

@@ -40,6 +40,8 @@ public class PlayerController : ModelBase
     {
         if(targetRow < 0 || targetCol < 0 || targetRow >= GameApp.MapManager.TotalRowCount || targetCol >= GameApp.MapManager.TotalColCount) { return; }
 
+        if(GameApp.MapManager.GetBlockType(targetRow,targetCol) == BlockType.empty) { return; }
+
         if (isMoving || isAttacking) return;
 
         if (GameApp.CommandManager.isStop) return;

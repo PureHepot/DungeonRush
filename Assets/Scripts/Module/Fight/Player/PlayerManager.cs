@@ -74,6 +74,8 @@ public class PlayerManager
         }
     }
 
+    public GameObject playerPrefab;
+
     public Dictionary<int, Dictionary<string, string>> datas;
 
     public PlayerManager()
@@ -84,10 +86,23 @@ public class PlayerManager
         hasLeg = false;
         hasArm = false;
         hasHeart = false;
+
+        playerPrefab = Resources.Load<GameObject>("Prefabs/Model/Player/Player");
     }
 
     public float GetDistance(ModelBase model)
     {
         return Mathf.Sqrt(Mathf.Pow(model.RowIndex - player.RowIndex, 2) + Mathf.Pow(model.ColIndex - player.ColIndex, 2));
+    }
+
+    public void CreatePlayer(int row, int col)
+    {
+        GameApp.TimerManager.Register(0.5f, () =>
+        {
+            player = GameObject.Instantiate(playerPrefab, GameApp.MapManager.GetBlockPos(row, col), Quaternion.identity).GetComponent<PlayerController>();
+            player.RowIndex = row;
+            player.ColIndex = col;
+            player.PlayAni("Flashout");
+        });
     }
 }

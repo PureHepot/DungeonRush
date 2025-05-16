@@ -63,6 +63,8 @@ public class Enemy : ModelBase
 
         if (isMoving) return;
 
+        if (GameApp.MapManager.GetBlockByPos(targetRow, targetCol) == null) { return; }
+
         if (GameApp.MapManager.GetBlockType(targetRow, targetCol) != BlockType.floor) return;
 
         current = new EnemyMoveCommand(this, targetRow, targetCol, type);
