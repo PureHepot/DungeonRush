@@ -195,6 +195,10 @@ public class PlayerManager
                     GameApp.ViewManager.Open(ViewType.PlayerDesView);
                     if(SceneManager.GetActiveScene().name == "Level 1")
                         GameApp.PlayerManager.hasLeg = false;
+                    else if(SceneManager.GetActiveScene().name == "Level 2")
+                        GameApp.PlayerManager.hasHeart = false;
+                    else if (SceneManager.GetActiveScene().name == "Level 3")
+                        GameApp.PlayerManager.hasArm = false;
                     GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();
                 });
             });

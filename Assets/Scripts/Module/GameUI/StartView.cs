@@ -12,6 +12,7 @@ public class StartView : BaseView
         Find<Button>("StartBtn").onClick.AddListener(onStartBtn);
         Find<Button>("SettingBtn").onClick.AddListener(onSettingBtn);
         Find<Button>("ExitBtn").onClick.AddListener(onExitBtn);
+        Find<Button>("CreatorBtn").onClick.AddListener(onCreatorBtn);
     }
 
     private void onStartBtn()
@@ -50,5 +51,11 @@ public class StartView : BaseView
             },
             noCallback= () => { GameApp.SoundManager.PlayEffect("cancel", Camera.main.transform.position); }
         });
+    }
+
+    private void onCreatorBtn()
+    {
+        GameApp.SoundManager.PlayEffect("confirm", Camera.main.transform.position);
+        GameApp.ViewManager.Open(ViewType.CreatorView);
     }
 }

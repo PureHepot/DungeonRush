@@ -20,6 +20,7 @@ public class IdleCommand : BaseCommand
             b.isshot = true;
         }
         GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
+        GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, 1);
         model.PlayAni("Idle");
     }
 

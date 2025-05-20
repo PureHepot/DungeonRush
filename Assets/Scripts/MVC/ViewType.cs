@@ -14,5 +14,6 @@ public enum ViewType
     TipView,
     EscView,
     PlayerDesView,
-    SkillView
+    SkillView,
+    CreatorView
 }

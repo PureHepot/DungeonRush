@@ -20,6 +20,13 @@ public class GameUIController : BaseController
             parentTf = GameApp.ViewManager.canvasTf,
             Sorting_Order = 1
         });
+        GameApp.ViewManager.Register(ViewType.CreatorView, new ViewInfo()
+        {
+            PrefabName = "CreatorView",
+            controller = this,
+            parentTf = GameApp.ViewManager.canvasTf,
+            Sorting_Order = 1
+        });        
         GameApp.ViewManager.Register(ViewType.MessageView, new ViewInfo()
         {
             PrefabName = "MessageView",

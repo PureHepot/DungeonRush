@@ -14,6 +14,7 @@ public class HealCommand : BaseCommand
         base.Do();
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, -5);
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerHpChange, 1);
+        GameApp.SoundManager.PlayEffect("heal", Camera.main.transform.position);
     }
     public override bool Update(float dt)
     {
