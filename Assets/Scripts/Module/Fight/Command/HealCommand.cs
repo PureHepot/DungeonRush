@@ -12,7 +12,7 @@ public class HealCommand : BaseCommand
     public override void Do()
     {
         base.Do();
-        GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, -4);
+        GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, -5);
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerHpChange, 1);
     }
     public override bool Update(float dt)

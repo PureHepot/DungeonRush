@@ -21,12 +21,17 @@ public class AttackCommand : BaseCommand
     {
         base.Do();
         Debug.Log($"EnemyHp{enemy.CurHp}");
-        model.isAttacking = true;
         enemy.EnemyBeAttacked(damage);
         model.Face2Cell(enemy.RowIndex,enemy.ColIndex);
+
+        int offset_row = enemy.RowIndex - GameApp.PlayerManager.playerRow;
+        int offset_col = enemy.ColIndex - GameApp.PlayerManager.playerCol;
+
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(model.transform.DOMove(GameApp.MapManager.GetBlockPos(enemy.RowIndex, enemy.ColIndex),0.1f))
+
+        sequence.Append(model.transform.DOMove(GameApp.MapManager.GetBlockPos(model.RowIndex, model.ColIndex) + new Vector3(offset_col, offset_row)*0.5f,0.1f))
                 .Append(model.transform.DOMove(GameApp.MapManager.GetBlockPos(model.RowIndex,model.ColIndex),0.2f));
+        model.PlayAni("Atk");
     }
 
     public override bool Update(float dt)
@@ -34,7 +39,7 @@ public class AttackCommand : BaseCommand
         timeCount += dt;
         if (timeCount > attackTime)
         {
-            model.isAttacking = false;
+
             return true;
         }
         return false;

@@ -56,11 +56,13 @@ public class UserInputManager
 
         if(Input.GetKeyDown(KeyCode.Tab))
         {
+            GameApp.PlayerManager.isSkilling = true;
             GameApp.ViewManager.Open(ViewType.SkillView);
         }
         if (Input.GetKeyUp(KeyCode.Tab))
         {
-            GameApp.ViewManager.Close(ViewType.SkillView);
+            GameApp.PlayerManager.isSkilling = false;
+            GameApp.ViewManager.Close(ViewType.SkillView, true);
         }
     }
 }

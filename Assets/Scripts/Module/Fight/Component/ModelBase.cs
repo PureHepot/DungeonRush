@@ -53,7 +53,7 @@ public class ModelBase : MonoBehaviour
 
     }
 
-    public void Init()
+    public virtual void Init()
     {
         GameApp.MapManager.GetCellPos(this, transform.position);
     }
@@ -94,7 +94,12 @@ public class ModelBase : MonoBehaviour
      
     public void PlayAni(string aniName)
     {
-        animator.Play(aniName);
+        if(aniName != null)
+            animator.Play(aniName);
+    }
+    public void StopAni()
+    {
+        animator.enabled = false;
     }
 
     public void ChangePos(int row, int col)

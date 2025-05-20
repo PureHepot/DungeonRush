@@ -45,6 +45,7 @@ public class GameUIController : BaseController
     {
         RegisterFunc(Defines.OpenStartView, openStartView);
         RegisterFunc(Defines.OpenSetView, openSettingView);
+        RegisterFunc(Defines.OpenMessageView, openMessageView);
     }
 
     public override void RemoveGlobalEvent()

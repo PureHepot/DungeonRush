@@ -11,4 +11,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/dungeon.unity
     guid: 06d1ee290b1cb064fb8f1e2484b4dddb
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 8dd06cad6980e9e4b8d5e17b49b68dd4
+  - enabled: 1
+    path: Assets/Scenes/Level 1.unity
+    guid: a91ff631702e88c459af15209ea77894
+  - enabled: 1
+    path: Assets/Scenes/Level 2.unity
+    guid: c9be1c2e67ca3734c915fe0412a882d8
+  - enabled: 1
+    path: Assets/Scenes/Level 3.unity
+    guid: 899ba48dda2a8224b84af1514318ef3d
   m_configObjects: {}

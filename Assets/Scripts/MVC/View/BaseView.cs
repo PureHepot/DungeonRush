@@ -72,7 +72,7 @@ public class BaseView : MonoBehaviour, IBaseView
 
     }
 
-    public void InitUI()
+    public virtual void InitUI()
     {
         
     }

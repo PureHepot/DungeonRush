@@ -14,23 +14,26 @@ public class PlayerController : ModelBase
     protected override void OnUpdate()
     {
         GameApp.CameraManager.SetPos(transform.position);
+
+        
     }
 
     protected override void OnFixedUpdate()
     {
+        if (GameApp.PlayerManager.isDead) return;
         if (Input.GetKey(KeyCode.W))
         {
             PlayerMove(RowIndex + 1, ColIndex);
         }
-        if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S))
         {
             PlayerMove(RowIndex - 1, ColIndex);
         }
-        if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A))
         {
             PlayerMove(RowIndex, ColIndex - 1);
         }
-        if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D))
         {
             PlayerMove(RowIndex, ColIndex + 1);
         }
@@ -40,9 +43,9 @@ public class PlayerController : ModelBase
     {
         if(targetRow < 0 || targetCol < 0 || targetRow >= GameApp.MapManager.TotalRowCount || targetCol >= GameApp.MapManager.TotalColCount) { return; }
 
-        if(GameApp.MapManager.GetBlockType(targetRow,targetCol) == BlockType.empty) { return; }
+        if(GameApp.MapManager.GetBlockType(targetRow,targetCol) == BlockType.empty || GameApp.MapManager.GetBlockOriginType(targetRow, targetCol) == BlockType.obstacle) { return; }
 
-        if (isMoving || isAttacking) return;
+        if (GameApp.CommandManager.isRunningCommand) return;
 
         if (GameApp.CommandManager.isStop) return;
 
@@ -68,4 +71,6 @@ public class PlayerController : ModelBase
         if(isAttacking) return;
         GameApp.CommandManager.AddCommand(new AttackCommand(this, enemy, Attack));
     }
+
+    
 }

@@ -87,4 +87,14 @@ public class ControllerManager
             return null;
         }
     }
+
+    public BaseController GetControllerbyKey(ControllerType controllerType)
+    {
+        if (_modules.ContainsKey((int)controllerType))
+        {
+            return _modules[(int)controllerType];
+        }
+        return null;
+           
+    }
 }

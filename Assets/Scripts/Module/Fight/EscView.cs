@@ -14,7 +14,7 @@ public class EscView : BaseView
     public override void Close(params object[] args)
     {
         base.Close(args);
-        GameApp.CommandManager.isStop = false;
+        
     }
 
     protected override void OnStart()
@@ -28,13 +28,15 @@ public class EscView : BaseView
 
     private void onContinueBtn()
     {
+        GameApp.CommandManager.isStop = false;
         GameApp.ViewManager.Close(ViewId);
         UserInputManager.escIsOpen = false;
     }
 
     private void onHomeBtn()
     {
-        LoadSomeScene.LoadtheScene(Controller,"game", () =>{ },
+        GameApp.CommandManager.isStop = true;
+        LoadSomeScene.LoadtheScene("game", () =>{ },
         () =>
         {
             GameApp.ViewManager.CloseAll();

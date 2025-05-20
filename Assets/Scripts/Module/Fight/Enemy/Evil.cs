@@ -170,6 +170,9 @@ public class Evil : Enemy
     private void onPreattackState()
     {
         ChangeType(1);
+
+        
+
         if (Random.Range(0, 3) == 1)
         {
             RandomMove();

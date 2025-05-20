@@ -32,7 +32,7 @@ public class GameScene : MonoBehaviour
 
         GameApp.ConfigManager.LoadAllConfigs();
 
-        //GameApp.SoundManager.PlayBGM("login");
+        GameApp.SoundManager.PlayBGM("music");
 
         RegisterModule();//注册游戏中的控制器
 

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,12 +13,6 @@ public class PlayerDesView : BaseView
     public override void InitData()
     {
         base.InitData();
-
-    }
-
-    protected override void OnStart()
-    {
-        base.OnStart();
         lifeImgs = new List<Image>();
         energyImgs = new List<Image>();
 
@@ -27,7 +20,7 @@ public class PlayerDesView : BaseView
         blink = Resources.Load<Material>("Materials/blink");
 
         Image temp;
-        for(int i = 1;i<=6;i++)
+        for (int i = 1; i <= 6; i++)
         {
             temp = Find<Image>($"heartsBG/life/imge{i}");
             temp.enabled = false;
@@ -38,6 +31,27 @@ public class PlayerDesView : BaseView
             temp = Find<Image>($"heartsBG/energy/imge{i}");
             temp.enabled = false;
             energyImgs.Add(temp);
+        }
+    }
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+        
+    }
+
+    public override void Open(params object[] args)
+    {
+        base.Open(args);
+        foreach (var item in lifeImgs)
+        {
+            item.material = blink;
+            item.enabled = false;
+        }
+        foreach (var item in energyImgs)
+        {
+            item.material = blink;
+            item.enabled = false;
         }
     }
 

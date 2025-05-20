@@ -18,7 +18,7 @@ public class EnemyHitCommand : BaseCommand
         int offset_col = model.ColIndex - GameApp.PlayerManager.playerCol;
 
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(model.transform.DOMove(GameApp.MapManager.GetBlockPos(model.RowIndex + offset_row, model.ColIndex + offset_col)-new Vector3(offset_row*0.3f, offset_col*0.3f), 0.1f))
+        sequence.Append(model.transform.DOMove(GameApp.MapManager.GetBlockPos(model.RowIndex, model.ColIndex)+new Vector3(offset_col*0.3f, offset_row*0.3f), 0.1f))
                 .Append(model.transform.DOMove(GameApp.MapManager.GetBlockPos(model.RowIndex, model.ColIndex), 0.2f));
         model.PlayAni("Hit");
     }

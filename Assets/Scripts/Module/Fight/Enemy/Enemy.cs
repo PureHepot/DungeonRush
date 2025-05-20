@@ -33,6 +33,7 @@ public class Enemy : ModelBase
     public int ObserInterval;
     public int obserTime;
     public int type;
+    public EnemyType enemyType;
 
     protected EnemyState currentState;
 
@@ -66,6 +67,8 @@ public class Enemy : ModelBase
         if (GameApp.MapManager.GetBlockByPos(targetRow, targetCol) == null) { return; }
 
         if (GameApp.MapManager.GetBlockType(targetRow, targetCol) != BlockType.floor) return;
+
+        if (GameApp.MapManager.GetBlockOriginType(targetRow,targetCol) == BlockType.fall) return;
 
         current = new EnemyMoveCommand(this, targetRow, targetCol, type);
     }

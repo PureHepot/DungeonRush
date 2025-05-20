@@ -8,6 +8,9 @@ public class EnemyMoveCommand : BaseCommand
     private int targetRow;
     private int targetCol;
 
+    string IdleAnim = "Idle";
+    string MoveAnim = "Move";
+
     public EnemyMoveCommand(ModelBase model) : base(model)
     {
 
@@ -29,23 +32,30 @@ public class EnemyMoveCommand : BaseCommand
         model.RowIndex = targetRow;
         model.ColIndex = targetCol;
         GameApp.MapManager.ChangeBlockType(targetRow, targetCol, BlockType.enemy);
-    }
 
-    public override bool Update(float dt)
-    {
-        string IdleAnim = "Idle";
-        string MoveAnim = "Move";
+        IdleAnim = "Idle";
+        MoveAnim = "Move";
 
         if (type == 1)
         {
             IdleAnim = "preAtkIdle";
             MoveAnim = "preAtkMove";
         }
+        else if (type == 2)
+        {
+            MoveAnim = "hitMove";
+        }
+    }
+
+    public override bool Update(float dt)
+    {
+        
 
         if (model.Move(targetRow, targetCol, 6*dt))
         {
             model.isMoving = false;
             model.PlayAni(IdleAnim);
+            
             return true;
         }
         

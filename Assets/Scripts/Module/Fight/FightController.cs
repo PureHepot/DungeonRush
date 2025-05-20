@@ -49,7 +49,7 @@ public class FightController : BaseController
     public void onBeginFight(object[] args)
     {
         GameApp.MapManager.Init();
-        GameApp.ViewManager.Open(ViewType.TipView, "Level 1");
+        //GameApp.CommandManager.isStop = false;
     }
     public void onPlayerHpChange(object[] args)
     {

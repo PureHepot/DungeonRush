@@ -13,8 +13,9 @@ public static class LoadSomeScene
     /// <param name="sceneName">要加载的场景名称</param>
     /// <param name="action1">加载完成后做的事</param>
     /// <param name="action2">加载中做的事</param>
-    public static void LoadtheScene(BaseController controller, string sceneName, System.Action action1, System.Action action2 = null)
+    public static void LoadtheScene(string sceneName, System.Action action1, System.Action action2 = null)
     {
+        BaseController controller = GameApp.ControllerManager.GetControllerbyKey(ControllerType.Game);
         LoadingModel loadingmodel = new LoadingModel();
         loadingmodel.SceneName = sceneName;
         loadingmodel.callback = action1;

@@ -17,7 +17,6 @@ public class MoveCommand : BaseCommand
         this.model = model;
         targetRow = Row;
         targetCol = Col;
-        model.isMoving = true;
     }
 
     public override void Do()
@@ -35,7 +34,6 @@ public class MoveCommand : BaseCommand
     {
         if (model.Move(targetRow, targetCol, 6*dt))
         {
-            model.isMoving = false;
             model.PlayAni("Idle");
             return true;
         }

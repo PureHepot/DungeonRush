@@ -42,5 +42,6 @@ public class GameApp : Singleton<GameApp>
         TimerManager.OnUpdate(dt);
         CommandManager.Update(dt);
         EnemyManager.Update(dt);
+        PlayerManager.Update(dt);
     }
 }

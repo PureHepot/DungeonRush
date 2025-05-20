@@ -16,13 +16,14 @@ public class StartView : BaseView
 
     private void onStartBtn()
     {
-        LoadSomeScene.LoadtheScene(Controller,"dungeon", () =>
+        LoadSomeScene.LoadtheScene("Tutorial", () =>
         {
             GameApp.ViewManager.Close(ViewType.LoadingView);
             Controller.ApplyControllerFunc(ControllerType.Fight, Defines.BeginFight);
         },
         () =>
         {
+            GameApp.ViewManager.Open(ViewType.TipView, "Tutorial");
             GameApp.ViewManager.Open(ViewType.PlayerDesView);
             GameApp.ViewManager.Close(ViewId);
             GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();

@@ -8,10 +8,19 @@ public enum BlockType
     bornland,
     floor,
     prick,
+    fall,
+    falling,
     obstacle,
     empty,
     player,
-    enemy
+    enemy,
+    downstair,
+    redbutton1, redbutton2, redbutton3, redbutton4,
+    bridge1, bridge2, bridge3, bridge4,
+    trigger1, trigger2, 
+    door1,door2,
+    blueBtn,
+    constraint
 }
 
 public class Block : MonoBehaviour
@@ -22,9 +31,12 @@ public class Block : MonoBehaviour
     public BlockType Type;
 
     public Vector3Int pos;
+    public int state=1;
     public Tile tile;
     public Sprite tileSprite;
     public Sprite replaceSprite;
+
+    public bool isInvoked = false;
 
     private SpriteRenderer selectSp;//选中的格子的图片
     private SpriteRenderer gridSp;//网格图片
@@ -50,6 +62,14 @@ public class Block : MonoBehaviour
                 break;
             case BlockType.bornland:
                 GameApp.PlayerManager.CreatePlayer(RowIndex, ColIndex);
+                break;
+            case BlockType.fall:
+                break;
+            case BlockType.door1:
+                originType = BlockType.obstacle;
+                break;
+            case BlockType.door2:
+                originType = BlockType.obstacle;
                 break;
         }
     }
@@ -83,6 +103,7 @@ public class Block : MonoBehaviour
         {
             GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
             GameApp.CommandManager.AddCommand(new FlashCommand(GameApp.PlayerManager.Player, this));
+            GameApp.MapManager.ChangeBlockType(RowIndex, ColIndex, BlockType.player);
         }
     }
 }
