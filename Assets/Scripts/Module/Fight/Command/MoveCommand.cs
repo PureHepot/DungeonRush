@@ -23,8 +23,16 @@ public class MoveCommand : BaseCommand
     {
         base.Do();
         GameApp.MapManager.ChangeBlockType(model.RowIndex, model.ColIndex, BlockType.floor);
+        
         model.RowIndex = targetRow;
         model.ColIndex = targetCol;
+        Block b = GameApp.MapManager.GetBlockByPos(targetRow, targetCol);
+        if (b.isdamage)
+        {
+            b.isshot = true;
+        }
+        
+        GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
         GameApp.MapManager.ChangeBlockType(targetRow, targetCol, BlockType.player);
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, 1);
         model.PlayAni("Move");

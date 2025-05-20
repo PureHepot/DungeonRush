@@ -4,3 +4,4 @@ Id,Name,Hp,Damage,AtkRange,VisionDis,MoveStep,ObInterval
 2003,Leg,2,1,2,6,2,2
 2004,GoldenLeg,6,1,2,6,2,2
 2005,Handeye,5,1,5,7,0,2
+2006,EvilMud,4,1,1,4,1,3

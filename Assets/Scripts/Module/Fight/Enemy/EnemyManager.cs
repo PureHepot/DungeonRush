@@ -9,7 +9,7 @@ public enum EnemyType
     Homoheart,
     Leg,
     GoldenLeg,
-    Hand
+    Handeye
 }
 
 
@@ -18,7 +18,10 @@ public enum EnemyType
 /// </summary>
 public class EnemyManager
 {
-    public int enemyCount;
+    public int enemyCount
+    {
+        get { return enemies.Count; }
+    }
     public List<Enemy> enemies;
     private Dictionary<EnemyType, GameObject> enemyPrefabs;
 

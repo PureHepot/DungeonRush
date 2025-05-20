@@ -20,7 +20,8 @@ public enum BlockType
     trigger1, trigger2, 
     door1,door2,
     blueBtn,
-    constraint
+    constraint,
+    constraint1
 }
 
 public class Block : MonoBehaviour
@@ -37,6 +38,9 @@ public class Block : MonoBehaviour
     public Sprite replaceSprite;
 
     public bool isInvoked = false;
+
+    public bool isdamage = false;
+    public bool isshot = false;
 
     private SpriteRenderer selectSp;//选中的格子的图片
     private SpriteRenderer gridSp;//网格图片
@@ -87,7 +91,7 @@ public class Block : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (gridSp.enabled == true)
+        if (gridSp.enabled == true && !isshot)
         {
             selectSp.enabled = true;
         }

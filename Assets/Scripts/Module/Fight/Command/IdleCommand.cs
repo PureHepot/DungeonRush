@@ -14,6 +14,12 @@ public class IdleCommand : BaseCommand
     public override void Do()
     {
         base.Do();
+        Block b = GameApp.MapManager.GetBlockByPos(GameApp.PlayerManager.playerRow, GameApp.PlayerManager.playerCol);
+        if (b.isdamage)
+        {
+            b.isshot = true;
+        }
+        GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
         model.PlayAni("Idle");
     }
 

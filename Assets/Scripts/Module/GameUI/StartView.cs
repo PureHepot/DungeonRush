@@ -16,7 +16,7 @@ public class StartView : BaseView
 
     private void onStartBtn()
     {
-        LoadSomeScene.LoadtheScene("Tutorial", () =>
+        LoadSomeScene.LoadtheScene("Level 3", () =>
         {
             GameApp.ViewManager.Close(ViewType.LoadingView);
             Controller.ApplyControllerFunc(ControllerType.Fight, Defines.BeginFight);

@@ -87,6 +87,10 @@ public class SkillView : BaseView
             GameApp.CommandManager.AddCommand(new ArmCommand(GameApp.PlayerManager.Player));
             GameApp.ViewManager.Close(ViewId, true);
         }
+        else
+        {
+            Find<Transform>("skill1").DOShakePosition(0.3f, 20f, 90);
+        }
     }
 
     private void onSkill2()

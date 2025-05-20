@@ -140,6 +140,7 @@ public class MapManager
         NextLevel();
         MessageButton();
         LevelConstraint();
+        ShotInvoke();
     }
 
     public void NextLevel()
@@ -197,6 +198,20 @@ public class MapManager
                             GameApp.ViewManager.Open(ViewType.PlayerDesView);
                         });
                     }
+                    else if (scenename == "Level 3")
+                    {
+                        GameApp.ViewManager.CloseAll();
+                        LoadSomeScene.LoadtheScene("Level 4", () =>
+                        {
+                            GameApp.ViewManager.Close(ViewType.LoadingView);
+                            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.BeginFight);
+                        },
+                        () =>
+                        {
+                            GameApp.ViewManager.Open(ViewType.TipView, "Level 4");
+                            GameApp.ViewManager.Open(ViewType.PlayerDesView);
+                        });
+                    }
                 });
             }
         }
@@ -233,6 +248,31 @@ public class MapManager
                 GameApp.PlayerManager.hasHeart = true;
             }
         }
+        else if (scenename == "Level 3")
+        {
+            int count = GameApp.EnemyManager.enemyCount;
+            if (count <= 0)
+            {
+                foreach (var item in typeBlocklist[BlockType.constraint])
+                {
+                    tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
+                    item.originType = BlockType.floor;
+                    item.Type = BlockType.floor;
+                }
+                GameApp.PlayerManager.hasArm = true;
+            }
+            count = GameApp.EnemyManager.GetEnemyCount(EnemyType.Handeye);
+            if (count <= 1)
+            {
+                foreach (var item in typeBlocklist[BlockType.constraint1])
+                {
+                    tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
+                    item.originType = BlockType.floor;
+                    item.Type = BlockType.floor;
+                }
+            }
+        }
+
     }
 
 
@@ -486,7 +526,37 @@ public class MapManager
 
                     });
                 }
+                else if (scenename == "Level 3")
+                {
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "Kill them all",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+
+                    });
+                }else if (scenename == "Level 4")
+                {
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "Thank for Playing",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+
+                    });
+                }
             }
+        }
+    }
+    public void ShotInvoke()
+    {
+        Block b = mapArr[GameApp.PlayerManager.playerRow, GameApp.PlayerManager.playerCol];
+        if(b.isshot)
+        {
+            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerHpChange, -1);
+            b.isshot = false;
+            b.isdamage = false;
+            b.HideGrid();
         }
     }
 
@@ -548,7 +618,10 @@ public class MapManager
 
         for (int i = 0; i < points.Count; i++)
         {
+            if (mapArr[points[i].RowIndex, points[i].ColIndex].isshot)
+                continue;
             mapArr[points[i].RowIndex, points[i].ColIndex].HideGrid();
+            mapArr[points[i].RowIndex, points[i].ColIndex].isdamage = false;
         }
         GameApp.CommandManager.isStop = false;
     }

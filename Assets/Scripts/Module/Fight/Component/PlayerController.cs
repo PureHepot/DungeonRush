@@ -56,8 +56,6 @@ public class PlayerController : ModelBase
             return;
         }
 
-        GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
-
         GameApp.CommandManager.AddCommand(new MoveCommand(this, targetRow, targetCol));
     }
 
