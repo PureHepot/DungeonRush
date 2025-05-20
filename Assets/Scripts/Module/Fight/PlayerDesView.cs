@@ -69,6 +69,7 @@ public class PlayerDesView : BaseView
                 lifeImgs[idx].enabled = true;
                 GameApp.CameraManager.CameraShake();
                 GameApp.PlayerManager.Player.PlayAni("Hit");
+                GameApp.SoundManager.PlayEffect("playerhit", GameApp.PlayerManager.Player.transform.position);
                 GameApp.TimerManager.Register(0.1f, () =>
                 {
                     lifeImgs[idx].material = lit2d;

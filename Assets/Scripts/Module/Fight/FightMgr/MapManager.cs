@@ -232,6 +232,7 @@ public class MapManager
                     item.Type = BlockType.floor;
                 }
                 GameApp.PlayerManager.hasLeg = true;
+                GameApp.SoundManager.PlayEffect("lossSkill", GameApp.PlayerManager.Player.transform.position);
             }
         }
         else if (scenename == "Level 2")
@@ -246,6 +247,7 @@ public class MapManager
                     item.Type = BlockType.floor;
                 }
                 GameApp.PlayerManager.hasHeart = true;
+                GameApp.SoundManager.PlayEffect("lossSkill", GameApp.PlayerManager.Player.transform.position);
             }
         }
         else if (scenename == "Level 3")
@@ -260,6 +262,7 @@ public class MapManager
                     item.Type = BlockType.floor;
                 }
                 GameApp.PlayerManager.hasArm = true;
+                GameApp.SoundManager.PlayEffect("lossSkill", GameApp.PlayerManager.Player.transform.position);
             }
             count = GameApp.EnemyManager.GetEnemyCount(EnemyType.Handeye);
             if (count <= 1)
@@ -285,6 +288,7 @@ public class MapManager
                 if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
                 {
                     tilemap.SetTile(b.pos, replaceTileDic[BlockType.redbutton1][1]);
+                    GameApp.SoundManager.PlayEffect("trigger", Camera.main.transform.position);
                     foreach (var t in typeBlocklist[BlockType.bridge1])
                     {
                         tilemap.SetTile(t.pos, replaceTileDic[BlockType.bridge1][1]);
@@ -302,6 +306,7 @@ public class MapManager
                     if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
                     {
                         tilemap.SetTile(b.pos, replaceTileDic[BlockType.redbutton2][1]);
+                        GameApp.SoundManager.PlayEffect("trigger", Camera.main.transform.position);
                         foreach (var t in typeBlocklist[BlockType.bridge2])
                         {
                             tilemap.SetTile(t.pos, replaceTileDic[BlockType.bridge2][1]);
@@ -320,6 +325,7 @@ public class MapManager
                     if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
                     {
                         tilemap.SetTile(b.pos, replaceTileDic[BlockType.redbutton3][1]);
+                        GameApp.SoundManager.PlayEffect("trigger", Camera.main.transform.position);
                         foreach (var t in typeBlocklist[BlockType.bridge3])
                         {
                             tilemap.SetTile(t.pos, replaceTileDic[BlockType.bridge3][1]);
@@ -463,10 +469,12 @@ public class MapManager
                 if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
                 {
                     tilemap.SetTile(b.pos, replaceTileDic[BlockType.trigger1][1]);
+                    GameApp.SoundManager.PlayEffect("buttondown", Camera.main.transform.position);
                     foreach (var t in typeBlocklist[BlockType.door1])
                     {
                         tilemap.SetTile(t.pos, replaceTileDic[BlockType.door1][1]);
                         ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
+                        GameApp.SoundManager.PlayEffect("dooropen", Camera.main.transform.position);
                     }
                 }
             }
@@ -478,9 +486,11 @@ public class MapManager
                 if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
                 {
                     tilemap.SetTile(b.pos, replaceTileDic[BlockType.trigger2][1]);
+                    GameApp.SoundManager.PlayEffect("buttondown", Camera.main.transform.position);
                     foreach (var t in typeBlocklist[BlockType.door2])
                     {
                         tilemap.SetTile(t.pos, replaceTileDic[BlockType.door2][1]);
+                        GameApp.SoundManager.PlayEffect("dooropen", Camera.main.transform.position);
                         ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
                     }
                 }
@@ -495,6 +505,7 @@ public class MapManager
             if(b.Type == BlockType.player && b.state == 1)
             {
                 tilemap.SetTile(b.pos, replaceTileDic[BlockType.blueBtn][b.state++]);
+                GameApp.SoundManager.PlayEffect("buttondown", Camera.main.transform.position);
                 string scenename = SceneManager.GetActiveScene().name;
                 if (scenename == "Tutorial")
                 {
@@ -539,9 +550,25 @@ public class MapManager
                 {
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "Thank for Playing",
-                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
-                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                        txt = "Thank for Playing\nYou finally win",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); 
+                            GameApp.CommandManager.isStop = true;
+                            LoadSomeScene.LoadtheScene("game", () => { },
+                            () =>
+                            {
+                                GameApp.ViewManager.CloseAll();
+                                GameApp.ViewManager.Open(ViewType.StartView);
+                            });
+                        },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView);
+                            GameApp.CommandManager.isStop = true;
+                            LoadSomeScene.LoadtheScene("game", () => { },
+                            () =>
+                            {
+                                GameApp.ViewManager.CloseAll();
+                                GameApp.ViewManager.Open(ViewType.StartView);
+                            });
+                        }
 
                     });
                 }

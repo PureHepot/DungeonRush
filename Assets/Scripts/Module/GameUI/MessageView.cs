@@ -41,11 +41,13 @@ public class MessageView : BaseView
 
     private void onOkBtn()
     {
+        GameApp.SoundManager.PlayEffect("confirm", Camera.main.transform.position);
         info.okCallback?.Invoke();
     }
 
     private void onNoBtn()
     {
+        GameApp.SoundManager.PlayEffect("cancel", Camera.main.transform.position);
         info?.noCallback?.Invoke();
         GameApp.ViewManager.Close(ViewId);
     }

@@ -21,6 +21,7 @@ public class FlashCommand : BaseCommand
         this.model.RowIndex = this.block.RowIndex;
         this.model.ColIndex = this.block.ColIndex;
         GameApp.MapManager.ChangeBlockType(model.RowIndex, model.RowIndex, BlockType.player);
+        GameApp.SoundManager.PlayEffect("flash", Camera.main.transform.position);
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, -5);
     }
 

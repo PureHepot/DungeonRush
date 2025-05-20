@@ -35,6 +35,7 @@ public class MoveCommand : BaseCommand
         GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
         GameApp.MapManager.ChangeBlockType(targetRow, targetCol, BlockType.player);
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, 1);
+        GameApp.SoundManager.PlayEffect("playermove", GameApp.PlayerManager.Player.transform.position);
         model.PlayAni("Move");
     }
 

@@ -55,6 +55,7 @@ public class SettingView : BaseView
     }
     private void onChangeVolumeSlider(float value)
     {
+
         GameApp.SoundManager.BgmVolume = value;
         GameApp.SoundManager.EffectVolume = value;
         if (value != 0)
@@ -67,5 +68,6 @@ public class SettingView : BaseView
     private void onCloseBtn()
     {
         GameApp.ViewManager.Close(ViewId);
+        GameApp.SoundManager.PlayEffect("cancel", Camera.main.transform.position);
     }
 }

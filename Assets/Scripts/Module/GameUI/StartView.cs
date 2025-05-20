@@ -16,13 +16,16 @@ public class StartView : BaseView
 
     private void onStartBtn()
     {
-        LoadSomeScene.LoadtheScene("Level 3", () =>
+        GameApp.SoundManager.PlayEffect("gamestart", Camera.main.transform.position);
+        GameApp.SoundManager.StopBGM();
+        LoadSomeScene.LoadtheScene("Tutorial", () =>
         {
             GameApp.ViewManager.Close(ViewType.LoadingView);
             Controller.ApplyControllerFunc(ControllerType.Fight, Defines.BeginFight);
         },
         () =>
         {
+            GameApp.SoundManager.PlayBGM("music");
             GameApp.ViewManager.Open(ViewType.TipView, "Tutorial");
             GameApp.ViewManager.Open(ViewType.PlayerDesView);
             GameApp.ViewManager.Close(ViewId);
@@ -31,17 +34,21 @@ public class StartView : BaseView
     }
     private void onSettingBtn()
     {
+        GameApp.SoundManager.PlayEffect("confirm", Camera.main.transform.position);
         ApplyFunc(Defines.OpenSetView);
     }
     private void onExitBtn()
     {
+        GameApp.SoundManager.PlayEffect("confirm", Camera.main.transform.position);
         Controller.ApplyFunc(Defines.OpenMessageView, new MessageInfo()
         {
             txt = "Quit Game?",
             okCallback = () =>
             {
+                GameApp.SoundManager.PlayEffect("confirm", Camera.main.transform.position);
                 Application.Quit();
-            }
+            },
+            noCallback= () => { GameApp.SoundManager.PlayEffect("cancel", Camera.main.transform.position); }
         });
     }
 }

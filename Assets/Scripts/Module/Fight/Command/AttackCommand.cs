@@ -31,6 +31,7 @@ public class AttackCommand : BaseCommand
 
         sequence.Append(model.transform.DOMove(GameApp.MapManager.GetBlockPos(model.RowIndex, model.ColIndex) + new Vector3(offset_col, offset_row)*0.5f,0.1f))
                 .Append(model.transform.DOMove(GameApp.MapManager.GetBlockPos(model.RowIndex,model.ColIndex),0.2f));
+        GameApp.SoundManager.PlayEffect("playerhit", Camera.main.transform.position);
         model.PlayAni("Atk");
     }
 
@@ -39,7 +40,7 @@ public class AttackCommand : BaseCommand
         timeCount += dt;
         if (timeCount > attackTime)
         {
-
+            model.PlayAni("Idle");
             return true;
         }
         return false;

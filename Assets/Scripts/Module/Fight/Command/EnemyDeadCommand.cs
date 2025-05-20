@@ -18,6 +18,8 @@ public class EnemyDeadCommand : BaseCommand
         sequence.Append(model.transform.DOShakePosition(0.2f, 0.5f, 90))
             .Append(model.transform.DOLocalRotate(new Vector3(0, 0, -90f), 0.2f))
             .Append(model.transform.DOScale(new Vector3(0.001f, 0.001f, 0.001f), 0.1f));
+        GameApp.SoundManager.PlayEffect("enemydead", Camera.main.transform.position);
+
     }
     public override bool Update(float dt)
     {

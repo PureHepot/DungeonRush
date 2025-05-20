@@ -18,7 +18,8 @@ public class LoadingView : BaseView
         circle = Find<RectTransform>("Circle");
     }
     public void Move2Center(System.Action callback)
-    {  
+    {
+        GameApp.SoundManager.PlayEffect("slashin", Camera.main.transform.position);
         circle.DOAnchorPosX(0, 0.5f).OnComplete(() =>
         {
             callback?.Invoke();
@@ -27,6 +28,7 @@ public class LoadingView : BaseView
     public void Move2Left(params object[] args)
     {
         circle.DOAnchorPosX(-2800, 0.5f);
+        GameApp.SoundManager.PlayEffect("slashout", Camera.main.transform.position);
     }
 
 

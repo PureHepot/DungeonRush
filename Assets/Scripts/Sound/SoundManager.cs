@@ -70,7 +70,7 @@ public class SoundManager
 
         IsStop = false;
         bgmVolume = 1f;
-        effectVolume = 1f;
+        effectVolume = 0.7f;
     }
 
     public void PlayBGM(string res)
@@ -87,6 +87,11 @@ public class SoundManager
         }
         bgmSource.clip = clips[res];
         bgmSource.Play();
+    }
+
+    public void StopBGM()
+    {
+        bgmSource?.Stop();
     }
 
     public void PlayEffect(string name, Vector3 pos)
