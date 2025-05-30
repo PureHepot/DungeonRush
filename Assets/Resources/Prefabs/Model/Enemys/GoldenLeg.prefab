@@ -108,7 +108,11 @@ MonoBehaviour:
   ObserInterval: 0
   obserTime: 0
   type: 0
+  enemyType: 0
   pathIndex: 0
+  maxlegkids: 4
+  legkids: 0
+  runRound: 0
 --- !u!1 &8524941090096541281
 GameObject:
   m_ObjectHideFlags: 0

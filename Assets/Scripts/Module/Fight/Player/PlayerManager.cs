@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class PlayerManager
 {
     public bool GameStart;
+    public bool once;
 
     private PlayerController player;
     public PlayerController Player
@@ -133,7 +134,7 @@ public class PlayerManager
     public void CreatePlayer(int row, int col)
     {
         InitPlayer();
-        GameApp.TimerManager.Register(0.5f, () =>
+        GameApp.TimerManager.Register(1f, () =>
         {
             player = GameObject.Instantiate(playerPrefab, GameApp.MapManager.GetBlockPos(row, col), Quaternion.identity).GetComponent<PlayerController>();
             player.RowIndex = row;
@@ -148,61 +149,38 @@ public class PlayerManager
 
     public void PlayerDead()
     {
-        GameApp.TimerManager.Register(0.7f, () =>
+        if (!once)
         {
-            //GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
-            //{
-            //    txt = "You r Dead...",
-            //    okBtntxt = "Restart",
-            //    noBtntxt = "Exit",
-            //    okCallback = () =>
-            //    {
-            //        GameApp.ViewManager.CloseAll();
-            //        LoadSomeScene.LoadtheScene("Text", () =>
-            //        {
-            //            GameApp.ViewManager.Close(ViewType.LoadingView);
-            //            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.BeginFight);
-            //        },
-            //        () =>
-            //        {
-            //            GameApp.ViewManager.Open(ViewType.TipView, "Tutorial");
-            //            GameApp.ViewManager.Open(ViewType.PlayerDesView);
-            //            GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();
-            //        });
-            //    },
-            //    noCallback = () =>
-            //    {
-            //        LoadSomeScene.LoadtheScene("game", () => { },
-            //        () =>
-            //        {
-            //            GameApp.ViewManager.CloseAll();
-            //            GameApp.ViewManager.Open(ViewType.StartView);
-            //        });
-            //    }
-            //});
-            GameApp.ViewManager.Open(ViewType.TipView, "DIE");
-            GameApp.TimerManager.Register(1f, () =>
+            once = true;
+            GameApp.TimerManager.Register(0.7f, () =>
             {
-                GameApp.ViewManager.CloseAll();
-                LoadSomeScene.LoadtheScene(SceneManager.GetActiveScene().name, () =>
+                GameStart = false;
+                GameApp.ViewManager.Open(ViewType.TipView, "DIE");
+                GameApp.TimerManager.Register(1f, () =>
                 {
-                    GameApp.ViewManager.Close(ViewType.LoadingView);
-                    GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.BeginFight);
-                },
-                () =>
-                {
-                    GameApp.ViewManager.Open(ViewType.TipView, SceneManager.GetActiveScene().name);
-                    GameApp.ViewManager.Open(ViewType.PlayerDesView);
-                    if(SceneManager.GetActiveScene().name == "Level 1")
-                        GameApp.PlayerManager.hasLeg = false;
-                    else if(SceneManager.GetActiveScene().name == "Level 2")
-                        GameApp.PlayerManager.hasHeart = false;
-                    else if (SceneManager.GetActiveScene().name == "Level 3")
-                        GameApp.PlayerManager.hasArm = false;
-                    GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();
+                    GameApp.ViewManager.CloseAll();
+                    LoadSomeScene.LoadtheScene(SceneManager.GetActiveScene().name, () =>
+                    {
+                        GameApp.ViewManager.Close(ViewType.LoadingView);
+                        GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.BeginFight);
+                        once = false;
+                    },
+                    () =>
+                    {
+                        GameApp.ViewManager.Open(ViewType.TipView, SceneManager.GetActiveScene().name);
+                        GameApp.ViewManager.Open(ViewType.PlayerDesView);
+                        if (SceneManager.GetActiveScene().name == "Level 1")
+                            GameApp.PlayerManager.hasLeg = false;
+                        else if (SceneManager.GetActiveScene().name == "Level 2")
+                            GameApp.PlayerManager.hasHeart = false;
+                        else if (SceneManager.GetActiveScene().name == "Level 3")
+                            GameApp.PlayerManager.hasArm = false;
+                        GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();
+                    });
                 });
             });
-        });
+        }
+        
     }
 
     public void Update(float dt)

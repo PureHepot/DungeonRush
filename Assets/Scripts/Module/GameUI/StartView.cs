@@ -19,18 +19,18 @@ public class StartView : BaseView
     {
         GameApp.SoundManager.PlayEffect("gamestart", Camera.main.transform.position);
         GameApp.SoundManager.StopBGM();
-        LoadSomeScene.LoadtheScene("Tutorial", () =>
+        LoadSomeScene.LoadtheScene("Introduce", () =>
         {
             GameApp.ViewManager.Close(ViewType.LoadingView);
-            Controller.ApplyControllerFunc(ControllerType.Fight, Defines.BeginFight);
+            //Controller.ApplyControllerFunc(ControllerType.Fight, Defines.BeginFight);
         },
         () =>
         {
-            GameApp.SoundManager.PlayBGM("music");
-            GameApp.ViewManager.Open(ViewType.TipView, "Tutorial");
-            GameApp.ViewManager.Open(ViewType.PlayerDesView);
+            //GameApp.SoundManager.PlayBGM("music");
+            //GameApp.ViewManager.Open(ViewType.TipView, "Tutorial");
+            GameApp.ViewManager.Open(ViewType.SubString);
             GameApp.ViewManager.Close(ViewId);
-            GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();
+            //GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();
         });
     }
     private void onSettingBtn()

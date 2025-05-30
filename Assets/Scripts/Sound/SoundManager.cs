@@ -106,7 +106,7 @@ public class SoundManager
             clip = Resources.Load<AudioClip>($"Sounds/{name}");
             clips.Add(name, clip);
         }
-        AudioSource.PlayClipAtPoint(clips[name], pos);
+        AudioSource.PlayClipAtPoint(clips[name], pos, effectVolume);
 
     }
 }

@@ -15,5 +15,7 @@ public enum ViewType
     EscView,
     PlayerDesView,
     SkillView,
-    CreatorView
+    CreatorView,
+    TalkingView,
+    SubString
 }
