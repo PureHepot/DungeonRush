@@ -13,6 +13,7 @@ public class BlueButton : MonoBehaviour
     {
         if (collision != null && collision.tag == "Player")
         {
+            txt.Replace("\\n", "\n");
             GameApp.ViewManager.Open(ViewType.TalkingView, txt);
             GetComponent<SpriteRenderer>().sprite = Down;
             GameApp.SoundManager.PlayEffect("Talking", GameApp.PlayerManager.Player.transform.position);
