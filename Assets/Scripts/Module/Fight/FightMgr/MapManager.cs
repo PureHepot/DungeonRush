@@ -154,6 +154,7 @@ public class MapManager
                 GameApp.PlayerManager.GameStart = false;
                 GameApp.CommandManager.isStop = true;
                 GameApp.PlayerManager.Player.PlayAni("Flash");
+                GameApp.SoundManager.PlayEffect("flash", GameApp.PlayerManager.Player.transform.position);
 
                 string scenename = SceneManager.GetActiveScene().name;
                 GameApp.TimerManager.Register(0.3f, () =>
@@ -219,10 +220,12 @@ public class MapManager
         }
     }
 
+    bool flag1, flag2, flag3;
+
     public void LevelConstraint()
     {
         string scenename = SceneManager.GetActiveScene().name;
-        if (scenename == "Level 1")
+        if (!flag1 && scenename == "Level 2")
         {
             int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.GoldenLeg);
             if (count <= 0)
@@ -234,10 +237,11 @@ public class MapManager
                     item.Type = BlockType.floor;
                 }
                 GameApp.PlayerManager.hasLeg = true;
-                GameApp.SoundManager.PlayEffect("lossSkill", Camera.main.transform.position);
+                GameApp.SoundManager.PlayEffect("lossSkill", GameApp.PlayerManager.Player.transform.position);
+                flag1 = true;
             }
         }
-        else if (scenename == "Level 2")
+        else if (!flag2 && scenename == "Level 1")
         {
             int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.Homoheart);
             if (count <= 0)
@@ -249,10 +253,11 @@ public class MapManager
                     item.Type = BlockType.floor;
                 }
                 GameApp.PlayerManager.hasHeart = true;
-                GameApp.SoundManager.PlayEffect("lossSkill", Camera.main.transform.position);
+                GameApp.SoundManager.PlayEffect("lossSkill", GameApp.PlayerManager.Player.transform.position);
+                flag2 = true;
             }
         }
-        else if (scenename == "Level 3")
+        else if (!flag3 && scenename == "Level 3")
         {
             int count = GameApp.EnemyManager.enemyCount;
             if (count <= 0)
@@ -264,12 +269,26 @@ public class MapManager
                     item.Type = BlockType.floor;
                 }
                 GameApp.PlayerManager.hasArm = true;
-                GameApp.SoundManager.PlayEffect("lossSkill", Camera.main.transform.position);
+                GameApp.SoundManager.PlayEffect("lossSkill", GameApp.PlayerManager.Player.transform.position);
+                flag3 = true;
             }
             count = GameApp.EnemyManager.GetEnemyCount(EnemyType.Handeye);
             if (count <= 1)
             {
                 foreach (var item in typeBlocklist[BlockType.constraint1])
+                {
+                    tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
+                    item.originType = BlockType.floor;
+                    item.Type = BlockType.floor;
+                }
+            }
+        }
+        else if (scenename == "Tutorial")
+        {
+            int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.EnemyTarget);
+            if (count <= 0)
+            {
+                foreach (var item in typeBlocklist[BlockType.constraint])
                 {
                     tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
                     item.originType = BlockType.floor;

@@ -101,11 +101,15 @@ MonoBehaviour:
   bodySp: {fileID: 0}
   animator: {fileID: 0}
   isMoving: 0
-  normalSp: {fileID: 0}
-  preatkSp: {fileID: 0}
+  isAttacking: 0
   Step: 0
   AttackRange: 0
   VisionDis: 0
+  ObserInterval: 0
+  obserTime: 0
+  type: 0
+  enemyType: 0
+  pathIndex: 0
 --- !u!1 &8571884088562637839
 GameObject:
   m_ObjectHideFlags: 0

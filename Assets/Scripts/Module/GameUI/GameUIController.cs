@@ -26,13 +26,29 @@ public class GameUIController : BaseController
             controller = this,
             parentTf = GameApp.ViewManager.canvasTf,
             Sorting_Order = 1
-        });        
+        });
+        GameApp.ViewManager.Register(ViewType.TalkingView, new ViewInfo()
+        {
+            PrefabName = "TalkingView",
+            controller = this,
+            parentTf = GameApp.ViewManager.canvasTf,
+            Sorting_Order = 19
+        });
         GameApp.ViewManager.Register(ViewType.MessageView, new ViewInfo()
         {
             PrefabName = "MessageView",
             controller = this,
             parentTf = GameApp.ViewManager.canvasTf,
-            Sorting_Order = 999
+            Sorting_Order = 20
+
+        });
+        GameApp.ViewManager.Register(ViewType.SubString, new ViewInfo()
+        {
+            PrefabName = "SubString",
+            controller = this,
+            parentTf = GameApp.ViewManager.canvasTf,
+            Sorting_Order = 4
+
         });
         InitGlobalEvent();
         InitModuleEvent();

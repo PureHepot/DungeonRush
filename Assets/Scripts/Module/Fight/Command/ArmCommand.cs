@@ -35,7 +35,8 @@ public class ArmCommand : BaseCommand
         count += dt;
         if (count > time)
         {
-            GameApp.SoundManager.PlayEffect("shoot", Camera.main.transform.position);
+            
+            GameApp.SoundManager.PlayEffect("shoot", GameApp.PlayerManager.Player.transform.position);
             GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, -5);
             GameApp.MapManager.HideStepGrid(model, 2);
 

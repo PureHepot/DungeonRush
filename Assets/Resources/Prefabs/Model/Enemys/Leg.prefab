@@ -214,4 +214,5 @@ MonoBehaviour:
   ObserInterval: 0
   obserTime: 0
   type: 0
+  enemyType: 0
   pathIndex: 0

@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class EnemyHitCommand : BaseCommand
 {
+    float time = 0.34f;
+    float count;
+
     public EnemyHitCommand(ModelBase model) : base(model)
     {
         this.model = model;
@@ -25,6 +28,12 @@ public class EnemyHitCommand : BaseCommand
 
     public override bool Update(float dt)
     {
-        return true;
+        count += dt;
+        if (count > time)
+        {
+            model.PlayAni("Idle");
+            return true;
+        }
+        return false;
     }
 }

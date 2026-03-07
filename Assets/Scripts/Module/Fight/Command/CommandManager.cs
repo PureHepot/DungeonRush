@@ -25,10 +25,8 @@ public class CommandManager
 
     public bool isRunningCommand
     {
-        get
-        {
-            return current != null;
-        }
+        get;
+        set;
     }
 
     public void AddCommand(BaseCommand command)
@@ -57,6 +55,9 @@ public class CommandManager
                     GameApp.EnemyManager.GenerateEnemyCommand();
                     GameApp.MapManager.SpecialBlockEvent();
                     counter = 0;
+                    isRunningCommand = true;
+                    GameApp.TimerManager.Register(0.2f, () => { isRunningCommand = false; });
+
                 }
                 else if(counter>= roundTime2)
                 {
@@ -75,7 +76,7 @@ public class CommandManager
         }
         else
         {
-            if (current.Update(dt) == true)
+            if (current.Update(dt))
             {
                 current = null;
                 GameApp.PlayerManager.playerIdleTime = 0;
