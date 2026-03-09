@@ -113,12 +113,25 @@ public class MapManager
             mapArr[row, col] = o;
         }
         GameApp.EnemyManager.GetSceneEnemy();
+        //隐藏桥体
+        HideAllBridges();
     }
 
     public Block BlockHandler(Block b, Tile tile)
     {
-        BlockType type;
-        if (Enum.TryParse(tile.name.Split('-')[0], out type))
+        BlockType type = BlockType.empty;
+
+        // 如果瓦片名称包含墙体前缀
+        if (tile.name.Contains("atlas_walls_low") || tile.name.Contains("atlas_walls_high"))
+        {
+            type = BlockType.obstacle; // 强制标记为障碍物类型
+            b.originType = type;
+            b.Type = type;
+            b.tile = tile;
+            b.Init();
+        }
+        // 按照枚举名解析
+        else if (Enum.TryParse(tile.name.Split('-')[0], out type))
         {
             b.originType = type;
             b.Type = type;
@@ -126,7 +139,11 @@ public class MapManager
             b.Init();
         }
 
-        typeBlocklist[type].Add(b);
+        // 只有字典中存在的类型才加入列表
+        if (typeBlocklist.ContainsKey(type))
+        {
+            typeBlocklist[type].Add(b);
+        }
 
         return b;
     }
@@ -219,22 +236,38 @@ public class MapManager
         }
     }
 
+    //技能限制器
     public void LevelConstraint()
     {
         string scenename = SceneManager.GetActiveScene().name;
+
         if (scenename == "Level 1")
         {
+            // 获取第一关 Boss 的数量
             int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.GoldenLeg);
             if (count <= 0)
             {
+                /* 
                 foreach(var item in typeBlocklist[BlockType.constraint])
                 {
                     tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
                     item.originType = BlockType.floor;
                     item.Type = BlockType.floor;
                 }
-                GameApp.PlayerManager.hasLeg = true;
-                GameApp.SoundManager.PlayEffect("lossSkill", Camera.main.transform.position);
+                */
+
+                
+                if (GameApp.PlayerManager.hasLeg == false)
+                {
+                    GameApp.PlayerManager.hasLeg = true;
+                    GameApp.SoundManager.PlayEffect("getSkill", Camera.main.transform.position);
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "击败 Boss！获得了新能力：【灵巧之腿】\n(现在你可以进行冲刺了！)",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
+                }
             }
         }
         else if (scenename == "Level 2")
@@ -242,14 +275,29 @@ public class MapManager
             int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.Homoheart);
             if (count <= 0)
             {
+                /*
+                
                 foreach (var item in typeBlocklist[BlockType.constraint])
                 {
                     tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
                     item.originType = BlockType.floor;
                     item.Type = BlockType.floor;
                 }
-                GameApp.PlayerManager.hasHeart = true;
-                GameApp.SoundManager.PlayEffect("lossSkill", Camera.main.transform.position);
+                */
+
+                
+                if (GameApp.PlayerManager.hasHeart == false)
+                {
+                    GameApp.PlayerManager.hasHeart = true;
+                    GameApp.SoundManager.PlayEffect("getSkill", Camera.main.transform.position);
+
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "击败 Boss！获得了新能力：【坚韧之心】\n(现在你可以抵挡一次致命攻击！)",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
+                }
             }
         }
         else if (scenename == "Level 3")
@@ -257,31 +305,49 @@ public class MapManager
             int count = GameApp.EnemyManager.enemyCount;
             if (count <= 0)
             {
+                /*
+                
                 foreach (var item in typeBlocklist[BlockType.constraint])
                 {
                     tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
                     item.originType = BlockType.floor;
                     item.Type = BlockType.floor;
                 }
-                GameApp.PlayerManager.hasArm = true;
-                GameApp.SoundManager.PlayEffect("lossSkill", Camera.main.transform.position);
+                */
+
+                
+                if (GameApp.PlayerManager.hasArm == false)
+                {
+                    GameApp.PlayerManager.hasArm = true;
+                    GameApp.SoundManager.PlayEffect("getSkill", Camera.main.transform.position);
+
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "击败最终 Boss！获得了新能力：【力量之腕】\n(你的攻击力获得了极大提升！)",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
+                }
             }
-            count = GameApp.EnemyManager.GetEnemyCount(EnemyType.Handeye);
-            if (count <= 1)
+
+            int handeyeCount = GameApp.EnemyManager.GetEnemyCount(EnemyType.Handeye);
+            if (handeyeCount <= 1)
             {
+                /*
+                
                 foreach (var item in typeBlocklist[BlockType.constraint1])
                 {
                     tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
                     item.originType = BlockType.floor;
                     item.Type = BlockType.floor;
                 }
+                */
             }
         }
-
     }
 
 
-    public void BuildBridge()
+    /*public void BuildBridge()
     {
         foreach (var b in typeBlocklist[BlockType.redbutton1])
         {
@@ -296,6 +362,14 @@ public class MapManager
                         tilemap.SetTile(t.pos, replaceTileDic[BlockType.bridge1][1]);
                         ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
                     }
+
+                    
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "某处的机关启动了",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
                 }
             }
         }
@@ -303,18 +377,23 @@ public class MapManager
         {
             if (b.Type == BlockType.player)
             {
-                if (b.Type == BlockType.player)
+                if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
                 {
-                    if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
+                    tilemap.SetTile(b.pos, replaceTileDic[BlockType.redbutton2][1]);
+                    GameApp.SoundManager.PlayEffect("trigger", Camera.main.transform.position);
+                    foreach (var t in typeBlocklist[BlockType.bridge2])
                     {
-                        tilemap.SetTile(b.pos, replaceTileDic[BlockType.redbutton2][1]);
-                        GameApp.SoundManager.PlayEffect("trigger", Camera.main.transform.position);
-                        foreach (var t in typeBlocklist[BlockType.bridge2])
-                        {
-                            tilemap.SetTile(t.pos, replaceTileDic[BlockType.bridge2][1]);
-                            ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
-                        }
+                        tilemap.SetTile(t.pos, replaceTileDic[BlockType.bridge2][1]);
+                        ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
                     }
+
+                    
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "某处的机关启动了",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
                 }
             }
         }
@@ -322,23 +401,95 @@ public class MapManager
         {
             if (b.Type == BlockType.player)
             {
-                if (b.Type == BlockType.player)
+                if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
                 {
-                    if (int.Parse(tilemap.GetTile(b.pos).name.Split('-')[1]) == 1)
+                    tilemap.SetTile(b.pos, replaceTileDic[BlockType.redbutton3][1]);
+                    GameApp.SoundManager.PlayEffect("trigger", Camera.main.transform.position);
+                    foreach (var t in typeBlocklist[BlockType.bridge3])
                     {
-                        tilemap.SetTile(b.pos, replaceTileDic[BlockType.redbutton3][1]);
-                        GameApp.SoundManager.PlayEffect("trigger", Camera.main.transform.position);
-                        foreach (var t in typeBlocklist[BlockType.bridge3])
+                        tilemap.SetTile(t.pos, replaceTileDic[BlockType.bridge3][1]);
+                        ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
+                    }
+
+                    
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "某处的机关启动了",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
+                }
+            }
+        }
+    }*/
+    public void BuildBridge()
+    {
+        // 依次检查三种红按钮和对应的桥
+        CheckAndTriggerBridge(BlockType.redbutton1, BlockType.bridge1);
+        CheckAndTriggerBridge(BlockType.redbutton2, BlockType.bridge2);
+        CheckAndTriggerBridge(BlockType.redbutton3, BlockType.bridge3);
+    }
+
+    private void CheckAndTriggerBridge(BlockType buttonType, BlockType bridgeType)
+    {
+        if (!typeBlocklist.ContainsKey(buttonType)) return;
+
+        foreach (var b in typeBlocklist[buttonType])
+        {
+            // 当玩家踩上按钮，且该按钮还处于“未按下”的状态（名字包含 "-1"）
+            if (b.Type == BlockType.player && tilemap.GetTile(b.pos) != null && tilemap.GetTile(b.pos).name.Contains("-1"))
+            {
+                // 改变按钮贴图为已按下状态，并播放音效
+                tilemap.SetTile(b.pos, replaceTileDic[buttonType][1]);
+                GameApp.SoundManager.PlayEffect("trigger", Camera.main.transform.position);
+
+                // 让隐藏的桥体出现
+                if (typeBlocklist.ContainsKey(bridgeType))
+                {
+                    foreach (var t in typeBlocklist[bridgeType])
+                    {
+                        
+                        if (t.tile != null)
                         {
-                            tilemap.SetTile(t.pos, replaceTileDic[BlockType.bridge3][1]);
-                            ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
+                            tilemap.SetTile(t.pos, t.tile);
                         }
+
+                        // 变为普通地板，允许通行，且不会再触发坠落
+                        ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
+                        t.Type = BlockType.floor;
                     }
                 }
+                GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                {
+                    txt = "某处的机关启动了",
+                    okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                    noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                });
+
             }
         }
     }
 
+    
+ 
+    public void HideAllBridges()
+    {
+        // 遍历所有可能的桥梁类型（如果你后续加入了 BlockType.bridge_A 这种枚举，也加进这个数组里）
+        BlockType[] bridgeTypes = new BlockType[] { BlockType.bridge1, BlockType.bridge2, BlockType.bridge3, BlockType.bridge4 };
+
+        foreach (var bType in bridgeTypes)
+        {
+            if (typeBlocklist.ContainsKey(bType))
+            {
+                foreach (var t in typeBlocklist[bType])
+                {
+                    // 在游戏开始时，将桥体地块在视觉上清空（设为 null）
+                    // 但不用担心，原瓦片资产已经安全保存在 t.tile 中了
+                    tilemap.SetTile(t.pos, null);
+                }
+            }
+        }
+    }
     public void FallTrapInvoke()
     {
         foreach (var item in typeBlocklist[BlockType.fall])
@@ -439,6 +590,7 @@ public class MapManager
         }
     }
 
+    //地刺陷阱
     public void PrickTrapUpdate()
     {
         foreach (var item in typeBlocklist[BlockType.prick])
@@ -453,7 +605,19 @@ public class MapManager
             {
                 if (item.RowIndex == GameApp.PlayerManager.playerRow && item.ColIndex == GameApp.PlayerManager.playerCol)
                 {
-                    GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerHpChange, -1);
+                    if (GameApp.PlayerManager.isShielded)
+                    {
+                        // 有护盾：抵挡伤害、碎盾、取消视觉表现
+                        GameApp.PlayerManager.isShielded = false;
+                        GameApp.PlayerManager.HandleShieldVisual(false);
+                        GameApp.SoundManager.PlayEffect("shieldbreak", GameApp.PlayerManager.Player.transform.position);
+                        Debug.Log("护盾成功抵挡了地刺陷阱的伤害！");
+                    }
+                    else
+                    {
+                        // 没护盾：正常扣血
+                        GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerHpChange, -1);
+                    }
                 }
                 else
                     item.Type = BlockType.prick;
@@ -478,6 +642,14 @@ public class MapManager
                         ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
                         GameApp.SoundManager.PlayEffect("dooropen", Camera.main.transform.position);
                     }
+
+                    
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "某处沉重的大门打开了",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
                 }
             }
         }
@@ -495,6 +667,14 @@ public class MapManager
                         GameApp.SoundManager.PlayEffect("dooropen", Camera.main.transform.position);
                         ChangeBlockOriginType(t.RowIndex, t.ColIndex, BlockType.floor);
                     }
+
+                    
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "某处沉重的大门打开了",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
                 }
             }
         }
@@ -506,17 +686,37 @@ public class MapManager
         {
             if(b.Type == BlockType.player && b.state == 1)
             {
+                // 状态机自增，改变按钮贴图并播放音效
                 tilemap.SetTile(b.pos, replaceTileDic[BlockType.blueBtn][b.state++]);
                 GameApp.SoundManager.PlayEffect("buttondown", Camera.main.transform.position);
                 string scenename = SceneManager.GetActiveScene().name;
                 if (scenename == "Tutorial")
                 {
+                    string currentMessage = "";
+
+                    // 通过 Tilemap 网格坐标 (b.pos) 区分不同的按钮
+                    if (b.pos.x == -1 && b.pos.y == -1)
+                    {
+                        currentMessage = "按下 Tab 键使用你的技能";
+                    }
+                    else if (b.pos.x == 7 && b.pos.y == 0)
+                    {
+                        currentMessage = "前有怪物！需要碰撞！提防张嘴！";
+                    }
+                    else if (b.pos.x == 27 && b.pos.y == 0)
+                    {
+                        currentMessage = "使用拉杆打开通往下层的大门吧";
+                    }
+                    else
+                    {
+                        currentMessage = "未知的提示信息"; 
+                    }
+
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "Press Tab to Use Your Skill",
+                        txt = currentMessage,
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                         noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
-
                     });
                 }
                 else if (scenename == "Level 1")

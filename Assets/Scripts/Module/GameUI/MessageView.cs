@@ -29,7 +29,7 @@ public class MessageView : BaseView
     {
         GameApp.CommandManager.isStop = true;
         info = args[0] as MessageInfo;
-        Find<TextMeshProUGUI>("content/txt").text = info.txt;
+        Find<Text>("content/txt").text = info.txt;
         Find<Text>("okBtn/txt").text = info.okBtntxt;
         Find<Text>("noBtn/txt").text = info.noBtntxt;
     }

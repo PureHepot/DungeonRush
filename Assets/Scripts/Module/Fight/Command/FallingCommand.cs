@@ -15,7 +15,13 @@ public class FallingCommand : BaseCommand
     public override void Do()
     {
         base.Do();
-
+        if (GameApp.PlayerManager.isShielded)
+        {
+            GameApp.PlayerManager.isShielded = false;
+            GameApp.PlayerManager.HandleShieldVisual(false);
+            // GameApp.SoundManager.PlayEffect("ShieldBreak", GameApp.PlayerManager.Player.transform.position); //播放碎盾音效
+            Debug.Log("护盾被落穴陷阱强制消耗，玩家发生坠落");
+        }
         model.PlayAni("fall");
         GameApp.MapManager.ChangeBlockType(model.RowIndex, model.ColIndex, BlockType.fall);
     }

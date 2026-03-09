@@ -76,6 +76,8 @@ public class PlayerManager
     public bool hasLeg;
     public bool hasArm;
     public bool hasHeart;
+    public bool hasBody;
+    public bool isShielded;
     private SpriteRenderer bodySp;
     public SpriteRenderer BodySp
     {
@@ -101,6 +103,8 @@ public class PlayerManager
         hasLeg = false;
         hasArm = false;
         hasHeart = false;
+        hasBody = true;
+        isShielded = false;
 
         playerPrefab = Resources.Load<GameObject>("Prefabs/Model/Player/Player");
     }
@@ -128,6 +132,7 @@ public class PlayerManager
         isDead = false;
         bodySp = null;
         player = null;
+        isShielded = false;
     }
 
     public void CreatePlayer(int row, int col)
@@ -210,5 +215,14 @@ public class PlayerManager
         if (!isDead && player!=null && !isSkilling)
             playerIdleTime += dt;
 
+    }
+
+
+    // 控制 Player 预制体下 ShieldOverlay 节点的显示隐藏
+    public void HandleShieldVisual(bool isActive)
+    {
+        if (Player == null) return;
+        Transform shield = Player.transform.Find("ShieldOverlay");
+        if (shield != null) shield.gameObject.SetActive(isActive);
     }
 }

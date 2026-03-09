@@ -78,11 +78,12 @@ public class SkillView : BaseView
         Find<Button>("skill1").onClick.AddListener(onSkill1);
         Find<Button>("skill2").onClick.AddListener(onSkill2);
         Find<Button>("skill3").onClick.AddListener(onSkill3);
+        Find<Button>("skill4").onClick.AddListener(onSkill4);
     }
 
     private void onSkill1()
     {
-        if (GameApp.PlayerManager.PlayerEnergy >= 5 && !GameApp.PlayerManager.hasArm)
+        if (GameApp.PlayerManager.PlayerEnergy >= 5 && GameApp.PlayerManager.hasArm)
         {
             GameApp.CommandManager.AddCommand(new ArmCommand(GameApp.PlayerManager.Player));
             GameApp.ViewManager.Close(ViewId, true);
@@ -96,7 +97,7 @@ public class SkillView : BaseView
     private void onSkill2()
     {
         
-        if (GameApp.PlayerManager.PlayerEnergy >= 5 && !GameApp.PlayerManager.hasLeg)
+        if (GameApp.PlayerManager.PlayerEnergy >= 5 && GameApp.PlayerManager.hasLeg)
         {
             GameApp.MapManager.ShowStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]), new Color(0, 234f / 255f, 234f / 255f, 0.5f));
             GameApp.ViewManager.Close(ViewId);
@@ -111,7 +112,7 @@ public class SkillView : BaseView
     {
         
 
-        if (GameApp.PlayerManager.PlayerEnergy >= 5 && !GameApp.PlayerManager.hasHeart)
+        if (GameApp.PlayerManager.PlayerEnergy >= 5 && GameApp.PlayerManager.hasHeart)
         {
             GameApp.PlayerManager.isSkilling = true;
             GameApp.CommandManager.AddCommand(new HealCommand(GameApp.PlayerManager.Player));
@@ -119,5 +120,27 @@ public class SkillView : BaseView
         }
         else
             Find<Transform>("skill3").DOShakePosition(0.3f, 20f, 90);
+    }
+    private void onSkill4()
+    {
+        if (GameApp.PlayerManager.PlayerEnergy >= 5 && GameApp.PlayerManager.hasBody)
+        {
+            if (!GameApp.PlayerManager.isShielded)
+            {
+                // ÷¥––÷∏¡Ó
+                GameApp.CommandManager.AddCommand(new BodyCommand(GameApp.PlayerManager.Player));
+
+
+                GameApp.ViewManager.Close(ViewId, true);
+            }
+            else
+            {
+                Find<Transform>("skill4").DOShakePosition(0.3f, 20f, 90);
+            }
+        }
+        else
+        {
+            Find<Transform>("skill4").DOShakePosition(0.3f, 20f, 90);
+        }
     }
 }
