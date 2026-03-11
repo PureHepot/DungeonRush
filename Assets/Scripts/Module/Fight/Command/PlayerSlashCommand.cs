@@ -4,41 +4,66 @@ using UnityEngine;
 
 public class PlayerSlashCommand : BaseCommand
 {
-    private int damage = 1; // 斩击伤害值，你可以随便填
+    private int damage = 3; // 斩击的伤害值
 
-    public PlayerSlashCommand(ModelBase model) : base(model)
+    // 用来存放从 PlayerController 传过来的特效预制体
+    private GameObject slashVfxPrefab;
+
+    // 【关键修复】：修改构造函数，接收 model 和 vfxPrefab 两个参数！
+    public PlayerSlashCommand(ModelBase model, GameObject vfxPrefab) : base(model)
     {
+        this.slashVfxPrefab = vfxPrefab;
     }
 
     public override void Do()
     {
         base.Do();
 
-        // 1. 播放玩家的攻击动画和特殊音效
-        model.PlayAni("Attack"); // 如果你有专门的斩击动画，换成比如 "Slash"
+
+        // 指令真正落地执行时，才扣除能量并刷新 UI
+        if (GameApp.PlayerManager.slashEnergy >= 30)
+        {
+            GameApp.PlayerManager.slashEnergy -= 30;
+            // 通知 UI 界面往下掉一截颜色
+            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, "OnSlashEnergyChange", GameApp.PlayerManager.slashEnergy);
+        }
+
+        // 播放玩家攻击动作
+        model.PlayAni("Attack");
+
+       
         GameApp.SoundManager.PlayEffect("slash", model.transform.position);
 
-        // 2. 确定玩家朝向 (1 为右，-1 为左)
+        // 确定玩家朝向 (1 为右，-1 为左)
         int dir = model.transform.localScale.x > 0 ? 1 : -1;
 
-        // 3. 计算 2x3 范围
+        if (slashVfxPrefab != null)
+        {
+            // 获取玩家正前方第 1 格的坐标
+            Vector3 vfxPos = GameApp.MapManager.GetBlockPos(model.RowIndex, model.ColIndex + dir);
+
+            // 生成这唯一的一个特效
+            GameObject vfxInstance = Object.Instantiate(slashVfxPrefab, vfxPos, Quaternion.identity);
+
+            // 处理翻转：
+            
+            vfxInstance.transform.localScale = new Vector3(-dir, 1, 1);
+        }
+        //计算3*3格子
         int centerRow = model.RowIndex;
-        // 前方第 1 格和第 2 格的列索引
-        int startCol = model.ColIndex + (dir * 1);
+
+        
+        int startCol = model.ColIndex;
         int endCol = model.ColIndex + (dir * 2);
 
-        // 用来记录砍中的敌人，防止同一个敌人被扣多次血
+        // 记录砍中的敌人，防止同一个敌人同一刀被扣多次血
         List<Enemy> hitEnemies = new List<Enemy>();
 
-        // 遍历这 2x3 个格子
+        // 遍历这 9 个格子 (3行 x 3列)
         for (int c = Mathf.Min(startCol, endCol); c <= Mathf.Max(startCol, endCol); c++)
         {
             for (int r = centerRow - 1; r <= centerRow + 1; r++)
             {
-                // 【可选】在这里生成一个酷炫的刀光粒子特效预制体
-                // Vector3 pos = GameApp.MapManager.GetBlockPos(r, c);
-                // Object.Instantiate(Resources.Load("Prefabs/Effects/SlashVFX"), pos, Quaternion.identity);
-
                 // 检查这个格子上是否有活着的敌人
                 foreach (var enemy in GameApp.EnemyManager.enemies)
                 {
@@ -53,7 +78,7 @@ public class PlayerSlashCommand : BaseCommand
             }
         }
 
-        // 4. 对所有被砍中的敌人统一造成伤害
+        // 对所有被砍中的敌人统一造成伤害
         foreach (var enemy in hitEnemies)
         {
             enemy.EnemyBeAttacked(damage);
@@ -64,7 +89,6 @@ public class PlayerSlashCommand : BaseCommand
 
     public override bool Update(float dt)
     {
-        // 瞬间完成的指令
         return true;
     }
 }

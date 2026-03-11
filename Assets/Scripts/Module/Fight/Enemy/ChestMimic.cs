@@ -170,10 +170,17 @@ public class ChestMimic : Enemy
             {
                 ChangeEnemyState(EnemyState.Dead);
 
+                // 1. 全局解锁标志
                 GameApp.PlayerManager.hasSlash = true;
+                GameApp.PlayerManager.slashEnergy = GameApp.PlayerManager.maxSlashEnergy; // 补满能量
+
+                // 2. 呼叫 UI 界面显示空心大剑
+                GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, "OnSlashUnlock");
+
+                // 3. 弹出文字提示
                 GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                 {
-                    txt = "成功击碎了机械宝箱，获得新能力！",
+                    txt = "击碎宝箱，领悟隐藏战技：【矩形斩击】！\n(按 J 键消耗能量释放)",
                     okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                     noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
                 });

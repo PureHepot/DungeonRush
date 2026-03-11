@@ -44,6 +44,9 @@ public class FightController : BaseController
         RegisterFunc(Defines.BeginFight, onBeginFight);
         RegisterFunc(Defines.OnPlayerHpChange, onPlayerHpChange);
         RegisterFunc(Defines.OnPlayerEnergyChange, onPlayerEnergyChange);
+
+        RegisterFunc("OnSlashUnlock", onSlashUnlock);
+        RegisterFunc("OnSlashEnergyChange", onSlashEnergyChange);
     }
 
     public void onBeginFight(object[] args)
@@ -60,5 +63,16 @@ public class FightController : BaseController
     {
         int count = (int)args[0];
         GameApp.ViewManager.GetView<PlayerDesView>(ViewType.PlayerDesView).ChangeEnergy(count);
+    }
+
+    public void onSlashUnlock(object[] args)
+    {
+        GameApp.ViewManager.GetView<PlayerDesView>(ViewType.PlayerDesView).UnlockSwordUI();
+    }
+
+    public void onSlashEnergyChange(object[] args)
+    {
+        int count = (int)args[0];
+        GameApp.ViewManager.GetView<PlayerDesView>(ViewType.PlayerDesView).UpdateSwordEnergy(count, GameApp.PlayerManager.maxSlashEnergy);
     }
 }

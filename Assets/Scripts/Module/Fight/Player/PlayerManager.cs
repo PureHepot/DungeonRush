@@ -79,6 +79,12 @@ public class PlayerManager
     public bool hasBody;
     public bool isShielded;
     public bool hasSlash;
+    public int slashEnergy = 100;         // 当前斩击能量
+    public int maxSlashEnergy = 100;      // 最大斩击能量
+
+    public float slashEnergyTimer = 0f;       // 能量恢复计时器
+    public int slashEnergyRecoverRate = 5;    // 每秒恢复的能量值
+
     private SpriteRenderer bodySp;
     public SpriteRenderer BodySp
     {
@@ -216,11 +222,36 @@ public class PlayerManager
     {
         if (!isDead && player!=null && !isSkilling)
             playerIdleTime += dt;
+        
+        
+        // 斩击能量自动恢复逻辑
+        // 只有当玩家存活、已解锁斩击技能、且能量未满时才进行恢复
+        if (!isDead && hasSlash && slashEnergy < maxSlashEnergy)
+        {
+            slashEnergyTimer += dt; // 累加时间
 
+            // 每过 1 秒执行一次恢复
+            if (slashEnergyTimer >= 1.0f)
+            {
+                slashEnergyTimer -= 1.0f; // 扣除1秒，保留多余的小数时间
+
+                slashEnergy += slashEnergyRecoverRate; // 增加能量
+
+                // 确保能量不会超过上限
+                if (slashEnergy > maxSlashEnergy)
+                {
+                    slashEnergy = maxSlashEnergy;
+                }
+
+                // 向控制器发送信号，UI 会自动接收并呈现出液体上涨动画
+                GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, "OnSlashEnergyChange", slashEnergy);
+            }
+        }
     }
 
 
     // 控制 Player 预制体下 ShieldOverlay 节点的显示隐藏
+    
     public void HandleShieldVisual(bool isActive)
     {
         if (Player == null) return;

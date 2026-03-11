@@ -293,3 +293,4 @@ MonoBehaviour:
   animator: {fileID: 0}
   isMoving: 0
   isAttacking: 0
+  slashVfxPrefab: {fileID: 730932288809558939, guid: 695894131312b874e8bff274bad62b0e, type: 3}
