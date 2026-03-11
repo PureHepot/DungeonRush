@@ -78,6 +78,7 @@ public class PlayerManager
     public bool hasHeart;
     public bool hasBody;
     public bool isShielded;
+    public bool hasSlash;
     private SpriteRenderer bodySp;
     public SpriteRenderer BodySp
     {
@@ -105,6 +106,7 @@ public class PlayerManager
         hasHeart = false;
         hasBody = true;
         isShielded = false;
+        hasSlash = false;
 
         playerPrefab = Resources.Load<GameObject>("Prefabs/Model/Player/Player");
     }

@@ -13,9 +13,28 @@ public class PlayerController : ModelBase
 
     protected override void OnUpdate()
     {
+        // 摄像机跟随玩家
         GameApp.CameraManager.SetPos(transform.position);
 
-        
+        // 【新增】：在这里监听隐藏斩击技能的输入
+        // ==========================================
+        // 确保玩家存活、当前没有正在执行其他指令、且不是敌人的回合
+        if (!GameApp.PlayerManager.isDead && !GameApp.CommandManager.isRunningCommand && !GameApp.CommandManager.isStop)
+        {
+            // 检测是否按下了 J 键 或 鼠标左键，并且已经解锁了该技能 (hasSlash 需要你在 PlayerManager 里定义)
+            if ((Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0)) && GameApp.PlayerManager.hasSlash)
+            {
+                // 可选：如果你想消耗能量，在这里加上判断
+                // if (GameApp.PlayerManager.PlayerEnergy >= 2) {
+                //     GameApp.PlayerManager.PlayerEnergy -= 2;
+
+                // 生成斩击指令并交给管理器执行
+                GameApp.CommandManager.AddCommand(new PlayerSlashCommand(this));
+
+                // }
+            }
+        }
+
     }
 
     protected override void OnFixedUpdate()

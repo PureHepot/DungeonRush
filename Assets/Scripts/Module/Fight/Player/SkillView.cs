@@ -32,8 +32,24 @@ public class SkillView : BaseView
     {
         base.Open(args);
         GameApp.CommandManager.isStop = true;
+        //判断是否有技能
+        Transform skill1 = Find<Transform>("skill1");
+        if (skill1 != null && skill1.Find("arm") != null)
+            skill1.Find("arm").gameObject.SetActive(GameApp.PlayerManager.hasArm);
 
-        for(int i = 0; i< skills.Length;i++)
+        Transform skill2 = Find<Transform>("skill2");
+        if (skill2 != null && skill2.Find("leg") != null)
+            skill2.Find("leg").gameObject.SetActive(GameApp.PlayerManager.hasLeg);
+
+        Transform skill3 = Find<Transform>("skill3");
+        if (skill3 != null && skill3.Find("heart") != null)
+            skill3.Find("heart").gameObject.SetActive(GameApp.PlayerManager.hasHeart);
+
+        Transform skill4 = Find<Transform>("skill4");
+        if (skill4 != null && skill4.Find("body") != null)
+            skill4.Find("body").gameObject.SetActive(GameApp.PlayerManager.hasBody);
+
+        for (int i = 0; i< skills.Length;i++)
         {
             skills[i].anchoredPosition = startPos[i];
         }

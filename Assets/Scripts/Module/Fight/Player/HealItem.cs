@@ -18,7 +18,7 @@ public class HealBag : MonoBehaviour
             // 当玩家不是满血时，才触发治疗
             if (currentHp < maxHp)
             {
-                // 计算实际恢复量（防止加血后溢出超过上限）
+                // 计算实际恢复量,防止加血后溢出超过上限
                 int actualHeal = Mathf.Min(healAmount, maxHp - currentHp);
 
                 // 发送加血事件

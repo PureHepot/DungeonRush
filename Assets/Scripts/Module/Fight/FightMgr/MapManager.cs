@@ -178,6 +178,7 @@ public class MapManager
                     if (scenename == "Tutorial")
                     {
                         GameApp.ViewManager.CloseAll();
+                        GameApp.SaveManager.SaveGame("Level 1");
                         LoadSomeScene.LoadtheScene("Level 1", () =>
                         {
                             GameApp.ViewManager.Close(ViewType.LoadingView);
@@ -192,6 +193,7 @@ public class MapManager
                     else if (scenename == "Level 1")
                     {
                         GameApp.ViewManager.CloseAll();
+                        GameApp.SaveManager.SaveGame("Level 2");
                         LoadSomeScene.LoadtheScene("Level 2", () =>
                         {
                             GameApp.ViewManager.Close(ViewType.LoadingView);
@@ -206,6 +208,7 @@ public class MapManager
                     else if (scenename == "Level 2")
                     {
                         GameApp.ViewManager.CloseAll();
+                        GameApp.SaveManager.SaveGame("Level 3");
                         LoadSomeScene.LoadtheScene("Level 3", () =>
                         {
                             GameApp.ViewManager.Close(ViewType.LoadingView);
@@ -220,6 +223,7 @@ public class MapManager
                     else if (scenename == "Level 3")
                     {
                         GameApp.ViewManager.CloseAll();
+                        GameApp.SaveManager.SaveGame("Level 4");
                         LoadSomeScene.LoadtheScene("Level 4", () =>
                         {
                             GameApp.ViewManager.Close(ViewType.LoadingView);
@@ -241,7 +245,7 @@ public class MapManager
     {
         string scenename = SceneManager.GetActiveScene().name;
 
-        if (scenename == "Level 1")
+        if (scenename == "Level 5")
         {
             // 获取第一关 Boss 的数量
             int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.GoldenLeg);
@@ -275,7 +279,7 @@ public class MapManager
             int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.Homoheart);
             if (count <= 0)
             {
-                /*
+                
                 
                 foreach (var item in typeBlocklist[BlockType.constraint])
                 {
@@ -283,7 +287,7 @@ public class MapManager
                     item.originType = BlockType.floor;
                     item.Type = BlockType.floor;
                 }
-                */
+                
 
                 
                 if (GameApp.PlayerManager.hasHeart == false)
@@ -293,7 +297,7 @@ public class MapManager
 
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "击败 Boss！获得了新能力：【坚韧之心】\n(现在你可以抵挡一次致命攻击！)",
+                        txt = "击败 Boss！取回了你的心\n(可以治疗了)",
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                         noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
                     });
@@ -474,7 +478,7 @@ public class MapManager
  
     public void HideAllBridges()
     {
-        // 遍历所有可能的桥梁类型（如果你后续加入了 BlockType.bridge_A 这种枚举，也加进这个数组里）
+        // 遍历所有可能的桥梁类型
         BlockType[] bridgeTypes = new BlockType[] { BlockType.bridge1, BlockType.bridge2, BlockType.bridge3, BlockType.bridge4 };
 
         foreach (var bType in bridgeTypes)
@@ -483,8 +487,7 @@ public class MapManager
             {
                 foreach (var t in typeBlocklist[bType])
                 {
-                    // 在游戏开始时，将桥体地块在视觉上清空（设为 null）
-                    // 但不用担心，原瓦片资产已经安全保存在 t.tile 中了
+                    
                     tilemap.SetTile(t.pos, null);
                 }
             }
@@ -733,7 +736,7 @@ public class MapManager
                 {
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "Find a way out among the thorns and reclaim your heart",
+                        txt = "找回你的心，注意移动！",
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                         noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
 

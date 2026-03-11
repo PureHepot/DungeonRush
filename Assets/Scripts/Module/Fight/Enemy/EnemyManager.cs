@@ -9,7 +9,8 @@ public enum EnemyType
     Homoheart,
     Leg,
     GoldenLeg,
-    Handeye
+    Handeye,
+    ChestMimic
 }
 
 
