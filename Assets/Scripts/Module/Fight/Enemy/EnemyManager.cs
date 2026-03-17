@@ -10,7 +10,9 @@ public enum EnemyType
     Leg,
     GoldenLeg,
     Handeye,
-    ChestMimic
+    ChestMimic,
+    Bomb,
+    GoldenHandeye
 }
 
 
@@ -60,7 +62,7 @@ public class EnemyManager
     {
         foreach (Enemy enemy in enemies)
         {
-            if (enemy.RowIndex == row && enemy.ColIndex == col)
+            if (enemy.CheckPos(row, col))
             {
                 return enemy;
             }

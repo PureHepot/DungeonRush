@@ -51,7 +51,7 @@ public class StartView : BaseView
         GameApp.PlayerManager.PlayerEnergy = GameApp.PlayerManager.playerMaxEnergy;
 
         //¼ÓÔØ³õÊ¼³¡¾°
-        LoadSomeScene.LoadtheScene("Level 1", () =>
+        LoadSomeScene.LoadtheScene("Level 4", () =>
         {
             GameApp.ViewManager.Close(ViewType.LoadingView);
             Controller.ApplyControllerFunc(ControllerType.Fight, Defines.BeginFight);
@@ -59,7 +59,7 @@ public class StartView : BaseView
         () =>
         {
             GameApp.SoundManager.PlayBGM("music");
-            GameApp.ViewManager.Open(ViewType.TipView, "Level 1");
+            GameApp.ViewManager.Open(ViewType.TipView, "Level 4");
             GameApp.ViewManager.Open(ViewType.PlayerDesView);
             GameApp.ViewManager.Close(ViewId);
             GameApp.PlayerManager.datas = GameApp.ConfigManager.GetConfigData("skill").GetLines();

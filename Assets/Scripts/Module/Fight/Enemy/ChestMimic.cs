@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class ChestMimic : Enemy
@@ -26,14 +27,12 @@ public class ChestMimic : Enemy
         GameApp.MapManager.ChangeBlockType(RowIndex, ColIndex, BlockType.enemy);
     }
 
-    // ==========================================
-    // 核心回合指令生成
-    // ==========================================
+    //核心指令
     public override void GenerateCommand()
     {
         base.GenerateCommand();
 
-        // 1. 昏厥判定（优先级最高，强力阻断）
+        // 昏厥判定（优先级最高，强力阻断）
         if (isStunned)
         {
             stunRounds++;
@@ -44,12 +43,12 @@ public class ChestMimic : Enemy
             {
                 Debug.Log("【宝箱怪】昏厥时间结束，强制清醒！");
 
-                // 【终极修复】：在这里强力重置所有状态，绝不依赖外部方法
+                // 强力重置所有状态，不依赖外部方法
                 isStunned = false;
                 stunRounds = 0;
                 type = 0;
 
-                // 安全重置动画（防空报错）
+                
                 if (animator != null)
                 {
                     animator.SetBool("isStunned", false);
@@ -68,13 +67,13 @@ public class ChestMimic : Enemy
             }
         }
 
-        // 2. 正常攻击检测
+        // 攻击检测
         if (GameApp.PlayerManager.GetDistance(this) <= AttackRange && type == 1)
         {
             ChangeEnemyState(EnemyState.Attack);
         }
 
-        // 3. 状态机路由分发
+        // 状态机路由分发
         switch (currentState)
         {
             case EnemyState.Idle:
@@ -109,22 +108,27 @@ public class ChestMimic : Enemy
 
     private void onPreattackState()
     {
-        type = 1;
-
-        
-        PlayAni("preAtk");
-
-        current = new EnemyIdleCommand();
-        preAtkRound++;
-
+       
         if (GameApp.PlayerManager.GetDistance(this) > AttackRange)
         {
             preAtkRound = 0;
             type = 0;
             ChangeEnemyState(EnemyState.Idle);
-            // 玩家跑了，恢复闭合待机
+
+            // 玩家不在攻击范围内
             PlayAni("Mimic_Idle");
+
+            
+            current = new EnemyIdleCommand();
+            return;
         }
+
+        //玩家在攻击范围内
+        type = 1;
+        PlayAni("preAtk"); 
+
+        current = new EnemyIdleCommand();
+        preAtkRound++;
     }
 
     private void onAttackState()
@@ -156,9 +160,8 @@ public class ChestMimic : Enemy
         current = new EnemyDeadCommand(this);
     }
 
-    // ==========================================
+    
     // 无敌机制与受击
-    // ==========================================
     public override void EnemyBeAttacked(int damage)
     {
         if (isStunned)
@@ -169,21 +172,29 @@ public class ChestMimic : Enemy
             if (CurHp <= 0)
             {
                 ChangeEnemyState(EnemyState.Dead);
+                GameApp.SoundManager.PlayEffect("enemydead",transform.position);
 
-                // 1. 全局解锁标志
-                GameApp.PlayerManager.hasSlash = true;
-                GameApp.PlayerManager.slashEnergy = GameApp.PlayerManager.maxSlashEnergy; // 补满能量
-
-                // 2. 呼叫 UI 界面显示空心大剑
-                GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, "OnSlashUnlock");
-
-                // 3. 弹出文字提示
-                GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                if (SceneManager.GetActiveScene().name == "Level 2")
                 {
-                    txt = "击碎宝箱，领悟隐藏战技：【矩形斩击】！\n(按 J 键消耗能量释放)",
-                    okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
-                    noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
-                });
+                    // 全局解锁标志
+                    GameApp.PlayerManager.hasSlash = true;
+                    GameApp.PlayerManager.slashEnergy = GameApp.PlayerManager.maxSlashEnergy; // 补满能量
+
+                    // 呼叫 UI 界面显示
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, "OnSlashUnlock");
+
+                    // 弹出文字提示
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "击杀传说宝箱，获得口口剑！\n(按 J 键或 鼠标左键 释放强力斩击)",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+                    });
+                }
+                else 
+                {
+                    Debug.Log("普通宝箱怪被击杀！");
+                }
             }
             else
             {
@@ -197,9 +208,8 @@ public class ChestMimic : Enemy
         }
     }
 
-    // ==========================================
+    
     // 护盾抵挡后触发
-    // ==========================================
     public void EnterStunnedState()
     {
         if (isStunned || currentState == EnemyState.Dead) return;

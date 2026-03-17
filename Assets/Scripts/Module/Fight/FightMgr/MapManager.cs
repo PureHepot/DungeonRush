@@ -166,7 +166,7 @@ public class MapManager
     {
         foreach (var b in typeBlocklist[BlockType.downstair])
         {
-            if(b.Type == BlockType.player)
+            if (b.Type == BlockType.player)
             {
                 GameApp.PlayerManager.GameStart = false;
                 GameApp.CommandManager.isStop = true;
@@ -231,7 +231,45 @@ public class MapManager
                         },
                         () =>
                         {
-                            GameApp.ViewManager.Open(ViewType.TipView, "END");
+                            // 之前这里写的是 "END"，现在改成 "Level 4" 保持连贯
+                            GameApp.ViewManager.Open(ViewType.TipView, "Level 4");
+                            GameApp.ViewManager.Open(ViewType.PlayerDesView);
+                        });
+                    }
+                    // ==========================================
+                    // 【新增】：打通第四关到第五关的通道
+                    // ==========================================
+                    else if (scenename == "Level 4")
+                    {
+                        GameApp.ViewManager.CloseAll();
+                        GameApp.SaveManager.SaveGame("Level 5");
+                        LoadSomeScene.LoadtheScene("Level 5", () =>
+                        {
+                            GameApp.ViewManager.Close(ViewType.LoadingView);
+                            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.BeginFight);
+                        },
+                        () =>
+                        {
+                            GameApp.ViewManager.Open(ViewType.TipView, "Level 5");
+                            GameApp.ViewManager.Open(ViewType.PlayerDesView);
+                        });
+                    }
+                    // ==========================================
+                    // 【新增】：打通第五关到第六关的通道
+                    // ==========================================
+                    else if (scenename == "Level 5")
+                    {
+                        GameApp.ViewManager.CloseAll();
+                        GameApp.SaveManager.SaveGame("Level 6");
+                        LoadSomeScene.LoadtheScene("Level 6", () =>
+                        {
+                            GameApp.ViewManager.Close(ViewType.LoadingView);
+                            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.BeginFight);
+                        },
+                        () =>
+                        {
+                            // 最后一关加载完成后，可以显示最终关卡的提示
+                            GameApp.ViewManager.Open(ViewType.TipView, "Level 6");
                             GameApp.ViewManager.Open(ViewType.PlayerDesView);
                         });
                     }
@@ -245,9 +283,9 @@ public class MapManager
     {
         string scenename = SceneManager.GetActiveScene().name;
 
-        if (scenename == "Level 5")
+        if (scenename == "Level 3")
         {
-            // 获取第一关 Boss 的数量
+            // 获取Boss 的数量
             int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.GoldenLeg);
             if (count <= 0)
             {
@@ -260,14 +298,14 @@ public class MapManager
                 }
                 */
 
-                
+
                 if (GameApp.PlayerManager.hasLeg == false)
                 {
                     GameApp.PlayerManager.hasLeg = true;
                     GameApp.SoundManager.PlayEffect("getSkill", Camera.main.transform.position);
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "击败 Boss！获得了新能力：【灵巧之腿】\n(现在你可以进行冲刺了！)",
+                        txt = "击败 Boss！取回了你的双腿\n(可以跳跃了！)",
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                         noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
                     });
@@ -279,17 +317,17 @@ public class MapManager
             int count = GameApp.EnemyManager.GetEnemyCount(EnemyType.Homoheart);
             if (count <= 0)
             {
-                
-                
+
+
                 foreach (var item in typeBlocklist[BlockType.constraint])
                 {
                     tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
                     item.originType = BlockType.floor;
                     item.Type = BlockType.floor;
                 }
-                
 
-                
+
+
                 if (GameApp.PlayerManager.hasHeart == false)
                 {
                     GameApp.PlayerManager.hasHeart = true;
@@ -304,22 +342,48 @@ public class MapManager
                 }
             }
         }
-        else if (scenename == "Level 3")
+        else if (scenename == "Level 4")
         {
-            int count = GameApp.EnemyManager.enemyCount;
-            if (count <= 0)
+            //int count = GameApp.EnemyManager.enemyCount;
+            //if (count <= 0)
+            //{
+
+
+            //    foreach (var item in typeBlocklist[BlockType.constraint])
+            //    {
+            //        tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
+            //        item.originType = BlockType.floor;
+            //        item.Type = BlockType.floor;
+            //    }
+
+
+
+            //    if (GameApp.PlayerManager.hasArm == false)
+            //    {
+            //        GameApp.PlayerManager.hasArm = true;
+            //        GameApp.SoundManager.PlayEffect("getSkill", Camera.main.transform.position);
+
+            //        GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+            //        {
+            //            txt = "击败最终 Boss！获得了新能力：【力量之腕】\n(你的攻击力获得了极大提升！)",
+            //            okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+            //            noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+            //        });
+            //    }
+            //}
+
+            int GoldenhandeyeCount = GameApp.EnemyManager.GetEnemyCount(EnemyType.GoldenHandeye);
+            if (GoldenhandeyeCount <= 0)
             {
-                /*
-                
+
+
                 foreach (var item in typeBlocklist[BlockType.constraint])
                 {
                     tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
                     item.originType = BlockType.floor;
                     item.Type = BlockType.floor;
                 }
-                */
 
-                
                 if (GameApp.PlayerManager.hasArm == false)
                 {
                     GameApp.PlayerManager.hasArm = true;
@@ -327,27 +391,30 @@ public class MapManager
 
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "击败最终 Boss！获得了新能力：【力量之腕】\n(你的攻击力获得了极大提升！)",
+                        txt = "击败 Boss！取回了你的双臂\n(可以射击了！)",
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                         noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
                     });
                 }
-            }
 
-            int handeyeCount = GameApp.EnemyManager.GetEnemyCount(EnemyType.Handeye);
-            if (handeyeCount <= 1)
+            }
+        }
+        else if (scenename == "Level 5") 
+        {
+            int count = GameApp.EnemyManager.enemyCount;
+            if (count <= 0)
             {
-                /*
-                
-                foreach (var item in typeBlocklist[BlockType.constraint1])
+
+
+                foreach (var item in typeBlocklist[BlockType.constraint])
                 {
                     tilemap.SetTile(item.pos, replaceTileDic[BlockType.floor][0]);
                     item.originType = BlockType.floor;
                     item.Type = BlockType.floor;
                 }
-                */
             }
         }
+
     }
 
 
@@ -726,7 +793,7 @@ public class MapManager
                 {
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "Get your legs back",
+                        txt = "门不能从这一侧打开",
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                         noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
 
@@ -734,9 +801,23 @@ public class MapManager
                 }
                 else if (scenename == "Level 2")
                 {
+                    string currentMessage = "";
+                    if (b.pos.x == 54 & b.pos.y == 20)
+                    {
+                        currentMessage = "危险的气息，开启你的护盾吧";
+                    }
+                    else if (b.pos.x == -1 & b.pos.y == 1) 
+                    {
+                        currentMessage = "快！心脏要逃走了！";
+                    }
+                    else
+                    {
+                        currentMessage = "未知的提示信息";
+                    }
+
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "找回你的心，注意移动！",
+                        txt = currentMessage,
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                         noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
 
@@ -746,16 +827,16 @@ public class MapManager
                 {
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "Kill them all",
+                        txt = "如果能跳就好了",
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
                         noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
 
                     });
-                }else if (scenename == "Level 4")
+                }else if (scenename == "Level 6")
                 {
                     GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
                     {
-                        txt = "Thank for Playing\nYou finally win",
+                        txt = "Thank for Playing",
                         okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); 
                             GameApp.CommandManager.isStop = true;
                             LoadSomeScene.LoadtheScene("game", () => { },
@@ -774,6 +855,44 @@ public class MapManager
                                 GameApp.ViewManager.Open(ViewType.StartView);
                             });
                         }
+
+                    });
+                }
+                else if (scenename == "Level 4")
+                {
+                    string currentMessage = "";
+                    if (b.pos.x == -1 & b.pos.y == 1)
+                    {
+                        currentMessage = "取回你的手";
+                    }
+                    else if (b.pos.x == -3 & b.pos.y == 6)
+                    {
+                        currentMessage = "提问：超过第二名后你是第几名\n左:第三名 中:第二名 右:第三名";
+                    }
+                    else if (b.pos.x == -3 & b.pos.y == 30)
+                    {
+                        currentMessage = "你喜欢左还是右";
+                    }
+                    else
+                    {
+                        currentMessage = "未知的提示信息";
+                    }
+
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = currentMessage,
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
+
+                    });
+                }
+                else if (scenename == "Level 5")
+                {
+                    GameApp.ControllerManager.ApplyFunc(ControllerType.GameUI, Defines.OpenMessageView, new MessageInfo()
+                    {
+                        txt = "将他们一个不留的消灭掉！",
+                        okCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); },
+                        noCallback = () => { GameApp.ViewManager.Close(ViewType.MessageView); }
 
                     });
                 }

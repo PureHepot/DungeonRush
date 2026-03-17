@@ -15,7 +15,13 @@ public class DieCommand : BaseCommand
     public override void Do()
     {
         base.Do();
-        
+
+        if (model == null || model.gameObject == null)
+        {
+            isFinish = true; // 直接标记指令完成
+            return;          // 退出方法
+        }
+
         GameApp.PlayerManager.isDead = true;
         GameApp.PlayerManager.GameStart = false;
         Debug.Log("Die");

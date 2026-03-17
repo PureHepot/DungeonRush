@@ -91,11 +91,19 @@ public class ModelBase : MonoBehaviour
 
         return false;
     }
-     
+
     public void PlayAni(string aniName)
     {
-        if(aniName != null)
+        // 防止对已销毁的物体播放动画
+        if (this != null && gameObject != null && animator != null && gameObject.activeInHierarchy)
+        {
             animator.Play(aniName);
+        }
+        else
+        {
+            // 如果物体已经死了，直接静默拦截，什么都不做
+            // Debug.LogWarning($"试图给已经销毁的物体播放动画: {aniName}");
+        }
     }
     public void StopAni()
     {

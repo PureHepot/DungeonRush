@@ -86,4 +86,10 @@ public class Enemy : ModelBase
         Debug.Log($"Change to {state.ToString()}");
         currentState = state;
     }
+
+    public virtual bool CheckPos(int targetRow, int targetCol)
+    {
+        // 默认情况下，普通怪物只占一格，所以严格匹配坐标
+        return this.RowIndex == targetRow && this.ColIndex == targetCol;
+    }
 }
