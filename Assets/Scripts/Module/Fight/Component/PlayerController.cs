@@ -67,7 +67,10 @@ public class PlayerController : ModelBase
     {
         if(targetRow < 0 || targetCol < 0 || targetRow >= GameApp.MapManager.TotalRowCount || targetCol >= GameApp.MapManager.TotalColCount) { return; }
 
-        if(GameApp.MapManager.GetBlockType(targetRow,targetCol) == BlockType.empty || GameApp.MapManager.GetBlockOriginType(targetRow, targetCol) == BlockType.obstacle) { return; }
+        if(GameApp.MapManager.GetBlockType(targetRow,targetCol) == BlockType.empty ||
+           GameApp.MapManager.GetBlockOriginType(targetRow, targetCol) == BlockType.obstacle ||
+           GameApp.MapManager.GetBlockType(targetRow,targetCol) == BlockType.constraint ||    // 限制块也算作障碍
+           GameApp.MapManager.GetBlockType(targetRow, targetCol) == BlockType.constraint1) { return; }
 
         if (GameApp.CommandManager.isRunningCommand) return;
 

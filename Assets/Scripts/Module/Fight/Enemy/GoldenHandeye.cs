@@ -10,10 +10,7 @@ public class GoldenHandeye : Enemy
     {
         base.OnStart();
 
-        // ==========================================
-        // 【Boss 特化 1】：超远视距 (全图狙击)
-        // 强制覆盖配置表里的数值，设定为 99 格，只要玩家在地图上就会被锁定
-        // ==========================================
+        //索敌范围
         VisionDis = 20;
     }
 
@@ -53,7 +50,7 @@ public class GoldenHandeye : Enemy
         current = new EnemyIdleCommand();
         PlayAni("Idle");
 
-        // 因为 VisionDis 被设为了 99，这里几乎必然触发，Boss 会立刻进入攻击准备
+        
         if (GameApp.PlayerManager.GetDistance(this) <= VisionDis)
         {
             ChangeEnemyState(EnemyState.Preattack);

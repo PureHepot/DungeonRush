@@ -103,7 +103,7 @@ public class Block : MonoBehaviour
 
     private void OnSelectCallback(object arg)
     {
-        if (GameApp.CommandManager.isRunningCommand == false && selectSp.enabled == true && Type!=BlockType.empty)
+        if (GameApp.CommandManager.isRunningCommand == false && selectSp.enabled == true && Type!=BlockType.empty && !isdamage)
         {
             GameApp.MapManager.HideStepGrid(GameApp.PlayerManager.Player, int.Parse(GameApp.PlayerManager.datas[1002]["Range"]));
             GameApp.CommandManager.AddCommand(new FlashCommand(GameApp.PlayerManager.Player, this));

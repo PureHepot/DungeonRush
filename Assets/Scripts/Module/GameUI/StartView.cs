@@ -49,7 +49,8 @@ public class StartView : BaseView
         GameApp.PlayerManager.hasBody = true; // 护盾是初始技能
         GameApp.PlayerManager.PlayerHP = GameApp.PlayerManager.playerMaxHP;
         GameApp.PlayerManager.PlayerEnergy = GameApp.PlayerManager.playerMaxEnergy;
-
+        //Tutorial
+        //Level
         //加载初始场景
         LoadSomeScene.LoadtheScene("Level 4", () =>
         {

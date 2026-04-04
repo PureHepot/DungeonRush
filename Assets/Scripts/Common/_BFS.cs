@@ -109,7 +109,9 @@ public class _BFS
     public void AddFinds(int row, int col, Point father, List<Point> temps)
     {
         //不在查找的节点 且 对应地图格子不是障碍物 才能加入 查找字典
-        if (finds.ContainsKey($"{row}_{col}") == false && GameApp.MapManager.GetBlockType(row, col) != BlockType.obstacle)
+        if (finds.ContainsKey($"{row}_{col}") == false && GameApp.MapManager.GetBlockType(row, col) != BlockType.obstacle
+            && GameApp.MapManager.GetBlockType(row, col) != BlockType.constraint && GameApp.MapManager.GetBlockType(row, col) != BlockType.constraint1
+            && GameApp.MapManager.GetBlockType(row, col) != BlockType.door1 && GameApp.MapManager.GetBlockType(row, col) != BlockType.door2)
         {
             Point p = new Point(row, col, father);
             //添加到查询到的字典

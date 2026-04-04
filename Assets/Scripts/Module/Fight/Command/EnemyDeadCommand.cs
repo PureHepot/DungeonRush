@@ -19,6 +19,8 @@ public class EnemyDeadCommand : BaseCommand
             .Append(model.transform.DOLocalRotate(new Vector3(0, 0, -90f), 0.2f))
             .Append(model.transform.DOScale(new Vector3(0.001f, 0.001f, 0.001f), 0.1f));
         GameApp.SoundManager.PlayEffect("enemydead", Camera.main.transform.position);
+        //怪物死亡时，奖励玩家一定的斩击能量
+        GameApp.PlayerManager.AddSlashEnergy(15);
 
     }
     public override bool Update(float dt)

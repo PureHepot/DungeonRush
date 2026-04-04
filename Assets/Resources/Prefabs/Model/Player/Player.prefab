@@ -201,6 +201,7 @@ GameObject:
   - component: {fileID: 8069708887200940566}
   - component: {fileID: 2846587303668691717}
   - component: {fileID: 2656187939197335076}
+  - component: {fileID: 7027649443310499262}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -294,3 +295,16 @@ MonoBehaviour:
   isMoving: 0
   isAttacking: 0
   slashVfxPrefab: {fileID: 730932288809558939, guid: 695894131312b874e8bff274bad62b0e, type: 3}
+--- !u!114 &7027649443310499262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285520627776144132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55fb2590eeebdde418987480f5347b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableCheat: 1

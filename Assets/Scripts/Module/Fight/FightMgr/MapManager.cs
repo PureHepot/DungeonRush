@@ -273,6 +273,22 @@ public class MapManager
                             GameApp.ViewManager.Open(ViewType.PlayerDesView);
                         });
                     }
+                    else if (scenename == "Test")
+                    {
+                        GameApp.ViewManager.CloseAll();
+                        GameApp.SaveManager.SaveGame("Turorial");
+                        LoadSomeScene.LoadtheScene("Tutorial", () =>
+                        {
+                            GameApp.ViewManager.Close(ViewType.LoadingView);
+                            GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.BeginFight);
+                        },
+                        () =>
+                        {
+                            
+                            GameApp.ViewManager.Open(ViewType.TipView, "Tutorial");
+                            GameApp.ViewManager.Open(ViewType.PlayerDesView);
+                        });
+                    }
                 });
             }
         }
@@ -402,7 +418,8 @@ public class MapManager
         else if (scenename == "Level 5") 
         {
             int count = GameApp.EnemyManager.enemyCount;
-            if (count <= 0)
+            int bombCount = GameApp.EnemyManager.GetEnemyCount(EnemyType.Bomb);
+            if (count - bombCount <= 0)
             {
 
 
@@ -867,7 +884,7 @@ public class MapManager
                     }
                     else if (b.pos.x == -3 & b.pos.y == 6)
                     {
-                        currentMessage = "提问：超过第二名后你是第几名\n左:第三名 中:第二名 右:第三名";
+                        currentMessage = "提问：超过第二名后你是第几名\n左:第三名 中:第二名 右:第一名";
                     }
                     else if (b.pos.x == -3 & b.pos.y == 30)
                     {
@@ -913,25 +930,48 @@ public class MapManager
 
     public Vector3 GetBlockPos(int row, int col)
     {
+        // 增加安全验证，防止获取越界坐标
+        if (row < 0 || row >= TotalRowCount || col < 0 || col >= TotalColCount)
+            return Vector3.zero;
+
         return mapArr[row, col].transform.position;
     }
 
     public BlockType GetBlockType(int row, int col)
     {
+        // 【核心修复】：如果闪现技能检测的坐标超出了地图边界，直接把它当成障碍物 (obstacle)！
+        // 这样玩家就无法闪现到地图外面，也不会引发数组越界报错了。
+        if (row < 0 || row >= TotalRowCount || col < 0 || col >= TotalColCount)
+        {
+            return BlockType.obstacle;
+        }
         return mapArr[row, col].Type;
     }
+
     public BlockType GetBlockOriginType(int row, int col)
     {
+        if (row < 0 || row >= TotalRowCount || col < 0 || col >= TotalColCount)
+        {
+            return BlockType.obstacle;
+        }
         return mapArr[row, col].originType;
     }
 
     public void ChangeBlockType(int row, int col, BlockType type)
     {
-        mapArr[row, col].Type = type;
+        // 只有在 0 到 边界 范围内，才允许改变地块状态
+        if (row >= 0 && row < TotalRowCount && col >= 0 && col < TotalColCount)
+        {
+            mapArr[row, col].Type = type;
+        }
     }
+
     public void ChangeBlockOriginType(int row, int col, BlockType type)
     {
-        mapArr[row, col].originType = type;
+        if (row >= 0 && row < TotalRowCount && col >= 0 && col < TotalColCount)
+        {
+            mapArr[row, col].originType = type;
+        }
     }
 
     public void GetCellPos(ModelBase model, Vector3 pos)
@@ -944,7 +984,12 @@ public class MapManager
 
     public Block GetBlockByPos(int row, int col)
     {
-        return mapArr[row,col];
+        // 边界保护
+        if (row >= 0 && row < TotalRowCount && col >= 0 && col < TotalColCount)
+        {
+            return mapArr[row, col];
+        }
+        return null;
     }
 
     //显示移动区域
@@ -976,4 +1021,6 @@ public class MapManager
         }
         GameApp.CommandManager.isStop = false;
     }
+
+    
 }

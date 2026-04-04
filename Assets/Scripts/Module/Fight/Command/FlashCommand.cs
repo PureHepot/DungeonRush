@@ -17,10 +17,10 @@ public class FlashCommand : BaseCommand
     public override void Do()
     {
         base.Do();
-        GameApp.MapManager.ChangeBlockType(model.RowIndex, model.RowIndex, BlockType.floor);
+        GameApp.MapManager.ChangeBlockType(model.RowIndex, model.ColIndex, BlockType.floor);
         this.model.RowIndex = this.block.RowIndex;
         this.model.ColIndex = this.block.ColIndex;
-        GameApp.MapManager.ChangeBlockType(model.RowIndex, model.RowIndex, BlockType.player);
+        GameApp.MapManager.ChangeBlockType(model.RowIndex, model.ColIndex, BlockType.player);
         GameApp.SoundManager.PlayEffect("flash", Camera.main.transform.position);
         GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, Defines.OnPlayerEnergyChange, -5);
     }

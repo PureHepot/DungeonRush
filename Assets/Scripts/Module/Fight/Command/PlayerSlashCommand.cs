@@ -5,11 +5,11 @@ using UnityEngine;
 public class PlayerSlashCommand : BaseCommand
 {
     private int damage = 3; // 斩击的伤害值
-
-    // 用来存放从 PlayerController 传过来的特效预制体
     private GameObject slashVfxPrefab;
 
-    // 【关键修复】：修改构造函数，接收 model 和 vfxPrefab 两个参数！
+    // 定义四个攻击方向
+    private enum SlashDirection { Up, Down, Left, Right }
+
     public PlayerSlashCommand(ModelBase model, GameObject vfxPrefab) : base(model)
     {
         this.slashVfxPrefab = vfxPrefab;
@@ -19,50 +19,100 @@ public class PlayerSlashCommand : BaseCommand
     {
         base.Do();
 
-
         // 指令真正落地执行时，才扣除能量并刷新 UI
         if (GameApp.PlayerManager.slashEnergy >= 30)
         {
             GameApp.PlayerManager.slashEnergy -= 30;
-            // 通知 UI 界面往下掉一截颜色
             GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, "OnSlashEnergyChange", GameApp.PlayerManager.slashEnergy);
         }
 
-        // 播放玩家攻击动作
+        // 播放玩家攻击动作和音效
         model.PlayAni("Attack");
-
-       
         GameApp.SoundManager.PlayEffect("slash", model.transform.position);
 
-        // 确定玩家朝向 (1 为右，-1 为左)
-        int dir = model.transform.localScale.x > 0 ? 1 : -1;
 
+        //  获取鼠标在世界坐标系中的位置，并与玩家位置比对
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 playerPos = model.transform.position;
+
+        float dx = mouseWorldPos.x - playerPos.x;
+        float dy = mouseWorldPos.y - playerPos.y;
+
+        // 根据“X”型区域划分判定四个方向
+        SlashDirection slashDir;
+        if (dy > Mathf.Abs(dx))
+            slashDir = SlashDirection.Up;
+        else if (dy < -Mathf.Abs(dx))
+            slashDir = SlashDirection.Down;
+        else if (dx > Mathf.Abs(dy))
+            slashDir = SlashDirection.Right;
+        else
+            slashDir = SlashDirection.Left;
+
+   
+        // 处理特效 (VFX) 的生成位置、旋转和翻转
         if (slashVfxPrefab != null)
         {
-            // 获取玩家正前方第 1 格的坐标
-            Vector3 vfxPos = GameApp.MapManager.GetBlockPos(model.RowIndex, model.ColIndex + dir);
+            Vector3 vfxPos = model.transform.position;
+            Quaternion vfxRot = Quaternion.identity;
+            Vector3 vfxScale = new Vector3(1, 1, 1);
 
-            // 生成这唯一的一个特效
-            GameObject vfxInstance = Object.Instantiate(slashVfxPrefab, vfxPos, Quaternion.identity);
+            switch (slashDir)
+            {
+                case SlashDirection.Right:
+                    vfxPos += new Vector3(1.5f, 0, 0);
+                    vfxScale = new Vector3(-1, 1, 1); // 默认向左，x为-1翻转至向右
+                    break;
+                case SlashDirection.Left:
+                    vfxPos += new Vector3(-1.5f, 0, 0);
+                    vfxScale = new Vector3(1, 1, 1);  // 默认向左
+                    break;
+                case SlashDirection.Up:
+                    vfxPos += new Vector3(0, 1.5f, 0);
+                    vfxRot = Quaternion.Euler(0, 0, -90); // 旋转特效朝上 (如果你的特效素材偏了，可尝试修改为 90)
+                    vfxScale = new Vector3(1, 1, 1);
+                    break;
+                case SlashDirection.Down:
+                    vfxPos += new Vector3(0, -1.5f, 0);
+                    vfxRot = Quaternion.Euler(0, 0, 90);  // 旋转特效朝下 (可尝试修改为 -90)
+                    vfxScale = new Vector3(1, 1, 1);
+                    break;
+            }
 
-            // 处理翻转：
-            
-            vfxInstance.transform.localScale = new Vector3(-dir, 1, 1);
+            GameObject vfxInstance = Object.Instantiate(slashVfxPrefab, vfxPos, vfxRot);
+            vfxInstance.transform.localScale = vfxScale;
         }
-        //计算3*3格子
-        int centerRow = model.RowIndex;
 
         
-        int startCol = model.ColIndex;
-        int endCol = model.ColIndex + (dir * 2);
+        // 计算 3x3 伤害格子的范围
+        int minCol = model.ColIndex;
+        int maxCol = model.ColIndex;
+        int minRow = model.RowIndex;
+        int maxRow = model.RowIndex;
 
-        // 记录砍中的敌人，防止同一个敌人同一刀被扣多次血
+        // 根据不同方向扩展攻击网格 (玩家自身向外延伸2格，侧边各延伸1格，形成3x3)
+        switch (slashDir)
+        {
+            case SlashDirection.Right:
+                maxCol += 2; minRow -= 1; maxRow += 1;
+                break;
+            case SlashDirection.Left:
+                minCol -= 2; minRow -= 1; maxRow += 1;
+                break;
+            case SlashDirection.Up:
+                maxRow += 2; minCol -= 1; maxCol += 1;
+                break;
+            case SlashDirection.Down:
+                minRow -= 2; minCol -= 1; maxCol += 1;
+                break;
+        }
+
+        // 4. 遍历伤害区域，扣除敌人血量
         List<Enemy> hitEnemies = new List<Enemy>();
 
-        // 遍历这 9 个格子 (3行 x 3列)
-        for (int c = Mathf.Min(startCol, endCol); c <= Mathf.Max(startCol, endCol); c++)
+        for (int c = minCol; c <= maxCol; c++)
         {
-            for (int r = centerRow - 1; r <= centerRow + 1; r++)
+            for (int r = minRow; r <= maxRow; r++)
             {
                 // 检查这个格子上是否有活着的敌人
                 foreach (var enemy in GameApp.EnemyManager.enemies)
@@ -78,15 +128,12 @@ public class PlayerSlashCommand : BaseCommand
             }
         }
 
-        // 对所有被砍中的敌人统一造成伤害
+        // 对所有被砍中的敌人造成伤害
         foreach (var enemy in hitEnemies)
         {
             enemy.EnemyBeAttacked(damage);
         }
-
-        Debug.Log($"【斩击】释放成功！击中了 {hitEnemies.Count} 个敌人！");
     }
-
     public override bool Update(float dt)
     {
         return true;

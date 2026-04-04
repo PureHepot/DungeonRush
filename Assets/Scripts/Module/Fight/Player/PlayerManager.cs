@@ -249,9 +249,25 @@ public class PlayerManager
         }
     }
 
+    public void AddSlashEnergy(int amount)
+    {
+        if (slashEnergy >= maxSlashEnergy)
+            return;
+
+        slashEnergy += amount;
+
+        // 确保增加后的能量不会超过上限
+        if (slashEnergy > maxSlashEnergy)
+        {
+            slashEnergy = maxSlashEnergy;
+        }
+
+        // 向控制器发送信号，UI 会自动接收并呈现出液体上涨动画
+        GameApp.ControllerManager.ApplyFunc(ControllerType.Fight, "OnSlashEnergyChange", slashEnergy);
+    }
 
     // 控制 Player 预制体下 ShieldOverlay 节点的显示隐藏
-    
+
     public void HandleShieldVisual(bool isActive)
     {
         if (Player == null) return;

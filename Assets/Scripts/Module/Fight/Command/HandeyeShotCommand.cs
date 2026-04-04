@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HandeyeShotCommand : BaseCommand
 {
+    
     class Point
     {
         public Point(int row, int col)
@@ -14,6 +15,8 @@ public class HandeyeShotCommand : BaseCommand
         public int row;
         public int col;
     }
+
+    private List<Point> actualAttackPoints = new List<Point>();
 
     public List<int> GetRandomNumbers(int n)
     {
@@ -53,14 +56,44 @@ public class HandeyeShotCommand : BaseCommand
 
         foreach(int i in nums)
         {
-            Block b = GameApp.MapManager.GetBlockByPos(points[i].row, points[i].col);
-            b.isdamage = true;
-            b.ShowGrid(Color.red);
+
+            Point p = points[i];
+
+            // 【新增防错 1】：防止玩家站在地图边缘时，计算出的攻击点超出数组边界引发报错
+            if (p.row < 0 || p.row >= GameApp.MapManager.TotalRowCount ||
+                p.col < 0 || p.col >= GameApp.MapManager.TotalColCount)
+            {
+                continue; // 超出地图边界，跳过该点
+            }
+            // ==========================================
+
+            Block b = GameApp.MapManager.GetBlockByPos(p.row, p.col);
+
+            if (b != null)
+            {
+                // ==========================================
+                // 【核心修复 2】：如果该地块是墙体（障碍物）或空地块，则不生成攻击判定！
+                if (b.Type == BlockType.obstacle || b.originType == BlockType.obstacle || b.Type == BlockType.empty)
+                {
+                    continue; // 是墙体，跳过该点，不让其变红
+                }
+
+                
+
+          
+                b.isdamage = true;
+             
+                b.ShowGrid(Color.red);
+            }
+                
+            
         }
     }
 
     public override bool Update(float dt)
     {
-        return true;
+        
+
+        return true; // 指令结束
     }
 }
